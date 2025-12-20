@@ -118,7 +118,7 @@ Page({
 
   handleContact() {
     wx.makePhoneCall({
-      phoneNumber: '13800000000' // 请修改为您的号码
+      phoneNumber: '17787897998' // 请修改为您的号码
     });
   },
 

@@ -1,22 +1,23 @@
 @theme-color: #3D553D; /* 主题深绿 */
 
 page {
-  background-color: #F2EDD0; /* 米色背景 */
+  background-color: #F2EDD0; /* 背景色 */
 }
 
 /* 主容器样式 */
 .container {
   min-height: 100vh;
-  background-color: #F2EDD0; /* 米色背景 */
+  background-color: #F2EDD0;
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .main-content {
     flex: 1;
     overflow: hidden;
   }
 
-  /* 顶部 Tab 样式 */
+  /* 顶部导航：保持系统字体 */
   .tabs-nav {
     display: flex;
     background: #fff;
@@ -28,13 +29,14 @@ page {
       flex: 1;
       text-align: center;
       font-size: 28rpx;
-      color: #7a8b7a; /* 未选中：灰绿色 */
+      color: #7a8b7a;
       position: relative;
       padding-bottom: 10rpx;
       
       &.active {
-        color: @theme-color; /* 选中：主题深绿 */
+        color: @theme-color;
         font-weight: bold;
+        
         &:after {
           content: '';
           position: absolute;
@@ -50,16 +52,16 @@ page {
     }
   }
 
-  /* === [修改] 瀑布流列表样式 === */
+  /* 瀑布流列表：使用微软雅黑 */
   .post-list {
     padding: 20rpx;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* 双列两端对齐 */
+    justify-content: space-between;
     align-items: flex-start;
     
     .post-card {
-      width: 48%; /* 双列宽度 */
+      width: 48%;
       background: #fff;
       border-radius: 16rpx;
       margin-bottom: 24rpx;
@@ -68,32 +70,31 @@ page {
       display: flex;
       flex-direction: column;
       
-      /* 图片区域 (4:3 比例) */
       .card-img-wrap {
         width: 100%;
-        height: 250rpx; /* 约等于宽度的 0.75 倍，视觉上接近 4:3 */
+        height: 250rpx;
         position: relative;
         background-color: #E9E4BA;
-
+        
         .cover-img {
           width: 100%;
           height: 100%;
           display: block;
         }
-
+        
         .img-count {
           position: absolute;
           right: 10rpx;
           top: 10rpx;
-          background: rgba(0,0,0,0.5);
+          background: rgba(0, 0, 0, 0.5);
           color: #fff;
           font-size: 20rpx;
           padding: 2rpx 8rpx;
           border-radius: 8rpx;
+          font-family: "Microsoft YaHei";
         }
       }
       
-      /* 内容区域 */
       .post-content {
         padding: 16rpx;
         flex: 1;
@@ -101,101 +102,354 @@ page {
         flex-direction: column;
         justify-content: space-between;
         
-        .text-desc { 
-          font-size: 26rpx; 
+        .text-desc {
+          font-size: 26rpx;
           color: #333;
           line-height: 1.4;
           margin-bottom: 16rpx;
-          /* 限制显示2行 */
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+          font-family: "Microsoft YaHei";
         }
-
+        
         .bottom-info {
           display: flex;
           justify-content: space-between;
           align-items: center;
-
-          .user-name { 
-            font-size: 22rpx; 
+          
+          .user-name {
+            font-size: 22rpx;
             color: @theme-color;
             font-weight: bold;
-            max-width: 70%;
+            max-width: 50%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            font-family: "Microsoft YaHei";
           }
-
+          
+          .delete-icon {
+            font-size: 22rpx;
+            color: #999;
+            margin-right: 12rpx;
+            font-family: "Microsoft YaHei";
+            &:active { opacity: 0.6; }
+          }
+          
           .comment-icon {
             font-size: 22rpx;
             color: #999;
+            font-family: "Microsoft YaHei";
           }
         }
       }
     }
-
+    
     .empty-state {
       width: 100%;
       text-align: center;
       padding: 100rpx 0;
       color: #999;
       font-size: 26rpx;
+      font-family: "Microsoft YaHei";
     }
   }
 
-  .footer-spacer { height: 120rpx; }
+  .footer-spacer {
+    height: 120rpx;
+  }
+
+  /* 详情弹出层样式：使用微软雅黑 */
+  .post-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #F2EDD0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    font-family: "Microsoft YaHei";
+
+    .detail-nav-bar {
+      width: 100%;
+      height: 88rpx;
+      display: flex;
+      align-items: center;
+      padding: 0 30rpx;
+      flex-shrink: 0;
+
+      .detail-back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80rpx;
+        height: 88rpx;
+        transition: opacity 0.2s;
+        &:active { opacity: 0.3; }
+        .back-icon-visual {
+          width: 22rpx;
+          height: 22rpx;
+          border-left: 3rpx solid #333;
+          border-bottom: 3rpx solid #333;
+          transform: rotate(45deg);
+          margin-left: 10rpx;
+        }
+      }
+    }
+
+    .detail-scroll-view {
+      flex: 1;
+      background-color: #fff;
+      
+      .detail-img-box {
+        width: 100%;
+        background: #f8f8f8;
+        .detail-full-img { width: 100%; display: block; }
+      }
+      
+      .detail-info-section {
+        padding: 30rpx;
+        border-bottom: 1rpx solid #eee;
+        .detail-user-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20rpx;
+          .detail-user-name { font-size: 32rpx; font-weight: bold; color: @theme-color; }
+          .detail-time { font-size: 24rpx; color: #999; }
+        }
+        .detail-full-content { font-size: 30rpx; line-height: 1.6; color: #333; word-break: break-all; }
+      }
+      
+      .detail-comment-section {
+        padding: 30rpx;
+        .detail-section-title { font-size: 28rpx; font-weight: bold; margin-bottom: 20rpx; color: #333; }
+        .comment-item {
+          padding: 15rpx 0;
+          font-size: 28rpx;
+          border-bottom: 1rpx solid #fafafa;
+          .comment-user-box {
+            display: inline;
+            .comment-user { color: @theme-color; font-weight: bold; }
+            .reply-text { font-size: 24rpx; color: #999; margin: 0 4rpx; }
+            .comment-colon { color: #333; }
+          }
+          .comment-text { color: #666; word-break: break-all; }
+        }
+        .no-comment { padding: 40rpx 0; text-align: center; font-size: 26rpx; color: #ccc; }
+      }
+    }
+
+    .detail-comment-input-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #F2EDD0;
+      padding: 20rpx 30rpx calc(20rpx + env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      border-top: 1rpx solid #f0f0f0;
+      box-sizing: border-box;
+      z-index: 10001;
+      .comment-input-field {
+        flex: 1;
+        height: 72rpx;
+        background: #e8e3b9;
+        border-radius: 36rpx;
+        padding: 0 30rpx;
+        font-size: 28rpx;
+        color: #333;
+      }
+      .comment-send-btn {
+        margin-left: 20rpx;
+        font-size: 30rpx;
+        color: #3d553d;
+        padding: 10rpx;
+        transition: all 0.3s;
+        &.active { color: @theme-color; font-weight: bold; }
+      }
+    }
+  }
+
+  /* 发布界面自定义样式 */
+  .publish-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #F2EDD0;
+    z-index: 10002;
+    display: flex;
+    flex-direction: column;
+    font-family: "Microsoft YaHei";
+
+    .publish-nav-bar {
+      height: 88rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30rpx;
+      flex-shrink: 0;
+      .pub-cancel { font-size: 30rpx; color: #666; padding: 10rpx; }
+      .pub-title { font-size: 32rpx; font-weight: bold; color: @theme-color; }
+      .pub-submit {
+        font-size: 28rpx;
+        color: #999;
+        background: #e8e3b9;
+        padding: 8rpx 30rpx;
+        border-radius: 30rpx;
+        &.active { color: #fff; background: @theme-color; }
+      }
+    }
+
+    .publish-edit-view {
+      flex: 1;
+      background: #fff;
+      border-radius: 30rpx 30rpx 0 0;
+      padding: 30rpx;
+      .publish-textarea {
+        width: 100%;
+        height: 350rpx;
+        font-size: 30rpx;
+        line-height: 1.6;
+        color: #333;
+      }
+      .publish-img-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20rpx;
+        margin-top: 30rpx;
+
+        .pub-img-item {
+          width: 215rpx;
+          height: 215rpx;
+          border-radius: 12rpx;
+          position: relative; /* 为删除按钮定位 */
+          background: #f5f5f5;
+
+          image {
+            width: 100%;
+            height: 100%;
+            border-radius: 12rpx;
+            display: block;
+          }
+
+          /* 删除照片按钮：红色圆形背景，粗白色减号 */
+          .img-delete-btn {
+            position: absolute;
+            top: -15rpx;
+            left: 0rpx;
+            width: 35rpx;
+            height: 35rpx;
+            background: #b8001e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            color: transparent; /* 隐藏原有的文字内容以确保减号纯净 */
+
+            &::after {
+              content: '';
+              width: 22rpx;
+              height: 6rpx;
+              background: #fff;
+              border-radius: 4rpx;
+              /* 调整减号垂直位置：正值向下移，负值向上移 */
+              margin-bottom: 2rpx; 
+              /* 调整减号横向位置：正值向右移，负值向左移 */
+              margin-left: -18rpx; 
+            }
+          }
+
+          /* 添加照片按钮样式美化 */
+          &.add-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f9f8f2;
+            border: 2rpx dashed #d6d0a7;
+            box-sizing: border-box;
+
+            .plus-icon {
+              font-size: 56rpx;
+              color: @theme-color;
+              margin-bottom: 6rpx;
+              line-height: 1;
+            }
+
+            .add-text {
+              font-size: 24rpx;
+              color: #a3a777;
+              font-weight: 500;
+            }
+
+            &:active {
+              background: #f2edd0;
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* 发布按钮：+ 号居中优化 */
+  .publish-btn {
+    position: fixed;
+    right: 40rpx;
+    bottom: 200rpx;
+    width: 100rpx;
+    height: 100rpx;
+    background: @theme-color;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 60rpx;
+    box-shadow: 0 6rpx 20rpx rgba(61, 85, 61, 0.4);
+    z-index: 100;
+    line-height: 1;
+    padding-bottom: 0rpx; 
+  }
 }
 
-/* === 悬浮元素 === */
-
-/* 右下角发布按钮 */
-.publish-btn {
-  position: fixed;
-  right: 40rpx;
-  bottom: 160rpx;
-  width: 100rpx;
-  height: 100rpx;
-  background: @theme-color; /* 按钮背景：主题深绿 */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 60rpx;
-  box-shadow: 0 6rpx 20rpx rgba(61, 85, 61, 0.4);
-  z-index: 100;
-}
-
-/* 底部导航栏 */
+/* 底部状态栏：系统字体 */
 .custom-tabbar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 100rpx;
-  background-color: #A3A777; /* 背景：橄榄绿 */
+  background-color: #A3A777;
   display: flex;
   align-items: center;
   justify-content: space-around;
   border-top: 1rpx solid #f0f0f0;
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 1000;
-  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.02);
-
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.02);
+  
   .tab-item {
     flex: 1;
     text-align: center;
     font-size: 28rpx;
-    color: #000000; /* 未选中：黑色 */
+    color: #000;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    
     &.active {
-      color: #3D553D; /* 选中：主题深绿 */
+      color: #3D553D;
       font-weight: bold;
     }
   }

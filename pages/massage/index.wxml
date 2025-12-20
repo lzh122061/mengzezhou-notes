@@ -1,87 +1,141 @@
 <view class="container">
+  <!-- 顶部状态栏占位 -->
   <view style="height: {{navHeight}}px"></view>
 
   <scroll-view scroll-y class="main-content">
+    <!-- 顶部选项卡 -->
     <view class="tabs-nav">
-      <view 
-        wx:for="{{tabs}}" 
-        wx:key="index" 
-        class="tab-item-top {{activeTab == index ? 'active' : ''}}" 
-        bindtap="switchTab" 
-        data-index="{{index}}"
-      >{{item}}</view>
+      <view wx:for="{{tabs}}" wx:key="index" class="tab-item-top {{activeTab == index ? 'active' : ''}}" bindtap="switchTab" data-index="{{index}}">{{item}}</view>
     </view>
 
     <!-- 瀑布流列表 -->
     <view class="post-list">
       <view class="post-card" wx:for="{{posts}}" wx:key="_id" wx:for-index="idx">
-        
-        <!-- 1. 图片区域 (只显示首图，保持 4:3 比例) -->
         <view class="card-img-wrap">
-          <image 
-            class="cover-img" 
-            src="{{item.images[0] || item.image}}" 
-            mode="aspectFill" 
-            catchtap="previewImage" 
-            data-current="{{item.images[0] || item.image}}" 
-            data-urls="{{item.images || [item.image]}}"
-          ></image>
-          <!-- 多图标识 -->
+          <image class="cover-img" src="{{item.images[0] || item.image}}" mode="aspectFill" catchtap="showPostDetail" data-post="{{item}}" data-index="{{idx}}"></image>
           <view class="img-count" wx:if="{{item.images && item.images.length > 1}}">
             <text>1/{{item.images.length}}</text>
           </view>
         </view>
 
-        <!-- 2. 内容区域 -->
         <view class="post-content">
           <text class="text-desc">{{item.content}}</text>
-          
           <view class="bottom-info">
             <text class="user-name">{{item.userName}}</text>
-            
-            <!-- 右侧操作区：包含删除和评论 -->
             <view class="action-right" style="display: flex; align-items: center;">
-              
-              <!-- === [新增] 删除按钮 === -->
-              <!-- 只有当(当前用户是作者) 或 (当前用户是管理员) 时显示 -->
-              <!-- 请确保 JS data 中有 openid 和 isAdmin 变量 -->
-              <view 
-                class="delete-icon" 
-                catchtap="handleDelete" 
-                data-id="{{item._id}}" 
-                data-index="{{idx}}"
-                wx:if="{{item._openid === openid || isAdmin}}"
-                style="margin-right: 12px; font-size: 12px; color: #999;"
-              >
+              <!-- 删除按钮：管理员或作者可见 -->
+              <view class="delete-icon" 
+                    catchtap="handleDelete" 
+                    data-id="{{item._id}}" 
+                    data-index="{{idx}}" 
+                    wx:if="{{isAdmin || item._openid === openid}}">
                 <text>删除</text>
               </view>
-
+              <!-- 评论图标 -->
               <view class="comment-icon" bindtap="handleComment" data-id="{{item._id}}" data-index="{{idx}}">
                 <text>💬 {{item.comments.length || 0}}</text>
               </view>
             </view>
-
           </view>
         </view>
-
       </view>
-      
+
+      <!-- 空状态 -->
       <view wx:if="{{posts.length === 0}}" class="empty-state">
         <text>暂无内容，点击右下角发布</text>
       </view>
     </view>
 
+    <!-- 悬浮发布按钮 -->
     <view class="publish-btn" bindtap="handlePublish">
       <text>+</text>
     </view>
-    
+
     <view class="footer-spacer"></view>
   </scroll-view>
 
+  <!-- 全局底部导航栏 -->
   <view class="custom-tabbar">
     <view class="tab-item" bindtap="navToHome">看个房间</view>
     <view class="tab-item" bindtap="navToNotes">归家手记</view>
     <view class="tab-item active">一起分享</view>
     <view class="tab-item" bindtap="navToMy">我的</view>
+  </view>
+
+  <!-- 帖子详情层 -->
+  <view class="post-detail-overlay" wx:if="{{showDetail}}">
+    <view style="height: {{navHeight}}px; width: 100%; flex-shrink: 0;"></view>
+    <view class="detail-nav-bar">
+      <view class="detail-back-btn" bindtap="closePostDetail">
+        <view class="back-icon-visual"></view>
+      </view>
+    </view>
+    <scroll-view scroll-y class="detail-scroll-view">
+      <view class="detail-img-box">
+        <swiper class="detail-swiper" indicator-dots="{{selectedPost.images.length > 1}}" indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#3D553D" circular style="height: 750rpx;">
+          <block wx:for="{{selectedPost.images}}" wx:key="*this">
+            <swiper-item>
+              <image class="detail-full-img" src="{{item}}" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+            </swiper-item>
+          </block>
+          <swiper-item wx:if="{{!selectedPost.images || selectedPost.images.length === 0}}">
+            <image class="detail-full-img" src="{{selectedPost.image}}" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+          </swiper-item>
+        </swiper>
+      </view>
+      <view class="detail-info-section">
+        <view class="detail-user-row">
+          <text class="detail-user-name">{{selectedPost.userName}}</text>
+          <text class="detail-time">{{selectedPost.displayTime}}</text>
+        </view>
+        <text class="detail-full-content">{{selectedPost.content}}</text>
+      </view>
+      <view class="detail-comment-section">
+        <view class="detail-section-title">评论 ({{selectedPost.comments.length || 0}})</view>
+        <view class="comment-item" wx:for="{{selectedPost.comments}}" wx:key="index" bindtap="tapReplyComment" data-user="{{item.userName}}">
+          <view class="comment-user-box">
+            <text class="comment-user">{{item.userName}}</text>
+            <text wx:if="{{item.replyTo}}" class="reply-text"> 回复 </text>
+            <text wx:if="{{item.replyTo}}" class="comment-user">{{item.replyTo}}</text>
+            <text class="comment-colon">：</text>
+          </view>
+          <text class="comment-text">{{item.content}}</text>
+        </view>
+        <view wx:if="{{!selectedPost.comments || selectedPost.comments.length === 0}}" class="no-comment">暂无评论，快来抢沙发吧~</view>
+        <view style="height: 180rpx;"></view>
+      </view>
+    </scroll-view>
+    <view class="detail-comment-input-bar">
+      <input class="comment-input-field" placeholder="{{commentPlaceholder || '说点什么...'}}" value="{{commentInputValue}}" focus="{{commentInputFocus}}" bindinput="onCommentInput" bindblur="onCommentBlur" />
+      <view class="comment-send-btn {{commentInputValue ? 'active' : ''}}" bindtap="submitDetailComment">发送</view>
+    </view>
+  </view>
+
+  <!-- 发布编辑层：直接跳转至此界面 -->
+  <view class="publish-overlay" wx:if="{{showPublishDrawer}}">
+    <view style="height: {{navHeight}}px; width: 100%; flex-shrink: 0;"></view>
+    <view class="publish-nav-bar">
+      <view class="pub-cancel" bindtap="closePublishDrawer">取消</view>
+      <view class="pub-title">发布分享</view>
+      <view class="pub-submit {{publishContent.length > 0 ? 'active' : ''}}" bindtap="confirmPublish">发布</view>
+    </view>
+    <scroll-view scroll-y class="publish-edit-view">
+      <textarea class="publish-textarea" placeholder="分享此刻的想法..." value="{{publishContent}}" bindinput="onPublishInput" maxlength="1000" focus="{{showPublishDrawer}}"></textarea>
+      
+      <view class="publish-img-grid">
+        <!-- 预览已选图片 -->
+        <view class="pub-img-item" wx:for="{{tempPublishImages}}" wx:key="*this" wx:for-index="imgIdx">
+          <image src="{{item}}" mode="aspectFill"></image>
+          <!-- 新增删除照片按钮 -->
+          <view class="img-delete-btn" catchtap="onDeleteImage" data-index="{{imgIdx}}">×</view>
+        </view>
+        
+        <!-- 内部添加照片按钮：上限9张 -->
+        <view class="pub-img-item add-btn" bindtap="onAddImage" wx:if="{{tempPublishImages.length < 9}}">
+          <text class="plus-icon">+</text>
+          <text class="add-text">添加照片</text>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 </view>
