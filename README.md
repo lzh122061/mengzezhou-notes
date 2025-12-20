@@ -1,44 +1,34 @@
-# TDesign 通用页面模板
+# 孟沢洲手账小程序
 
-基于 TDesign 打造的通用页面模板，包含通用的登陆注册、个人中心、设置中心、信息流等等功能。
+本项目是基于 TDesign 打造的通用页面模板进行的深度定制版本。主要用于个人手账管理，包含经过魔改的登录注册、个人中心及特色游览指南功能。
 
 ## 模版功能预览
 
-### 首页
+### 游览指南 (Massage)
+> **说明**：原有的 guide 页面已重构为全新的 massage 页面，作为项目的核心导览入口。
 
 <div style="display: flex">
-  <img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/home-1.png">
-  <img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/home-2.png">
+  <img width="375" alt="游览指南页面预览" src="./preview-massage.png">
 </div>
 
-### 信息发布
-
-<img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/publish-1.png">
-
-### 搜索页
-
-<img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/search-1.png">
-
-### 个人中心
+### 首页与核心功能
 <div style="display: flex">
-  <img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/user-1.png">
-  <img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/user-2.png">
-  <img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/user-3.png">
+  <img width="375" alt="首页预览" src="./preview-home.png">
+  <img width="375" alt="功能预览" src="./preview-feature.png">
 </div>
 
+### 个人中心与设置
+<div style="display: flex">
+  <img width="375" alt="个人中心" src="https://tdesign.gtimg.com/miniprogram/template/user-1.png">
+  <img width="375" alt="设置中心" src="https://tdesign.gtimg.com/miniprogram/template/setting-1.png">
+</div>
 
-### 设置中心
-
-<img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/setting-1.png">
-
-### 消息中心
-
-<img width="375" alt="image" src="https://tdesign.gtimg.com/miniprogram/template/message-1.png">
-
+## 项目特点
+- **样式升级**：全量使用 `less` 文件编写样式，不包含任何 `wxss` 文件。
+- **页面魔改**：根据个人需求对 TDesign 原始组件进行了深度二次开发。
+- **结构优化**：移除了冗余的 guide 页面，统一由 massage 页面承载游览指南。
 
 ## 开发预览
-### 目录结构（TODO: 生成目录结构树）
-
 
 ### 在开发者工具中预览
 
