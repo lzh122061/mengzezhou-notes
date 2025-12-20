@@ -8,20 +8,15 @@
 > **说明**：原有的 guide 页面已重构为全新的 massage 页面，作为项目的核心导览入口。
 
 <div style="display: flex">
-  <img width="375" alt="游览指南页面预览" src="./preview-massage.png">
+  <img width="375" alt="游览指南页面预览" src="./massage.png">
 </div>
 
 ### 首页与核心功能
 <div style="display: flex">
-  <img width="375" alt="首页预览" src="./preview-home.png">
-  <img width="375" alt="功能预览" src="./preview-feature.png">
+  <img width="375" alt="首页预览" src="./home.png">
+  <img width="375" alt="功能预览" src="./feature.png">
 </div>
 
-### 个人中心与设置
-<div style="display: flex">
-  <img width="375" alt="个人中心" src="https://tdesign.gtimg.com/miniprogram/template/user-1.png">
-  <img width="375" alt="设置中心" src="https://tdesign.gtimg.com/miniprogram/template/setting-1.png">
-</div>
 
 ## 项目特点
 - **样式升级**：全量使用 `less` 文件编写样式，不包含任何 `wxss` 文件。
