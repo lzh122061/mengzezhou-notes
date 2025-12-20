@@ -1,0 +1,101 @@
+{
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "后台测试",
+          "pathName": "pages/admin/index",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "后台管理页面",
+          "pathName": "pages/admin/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "message",
+          "pathName": "pages/message/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "search",
+          "pathName": "pages/search/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "login",
+          "pathName": "pages/login/login",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "loginCode",
+          "pathName": "pages/loginCode/loginCode",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "my",
+          "pathName": "pages/my/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "info-edit",
+          "pathName": "pages/my/info-edit/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "dataCenter",
+          "pathName": "pages/dataCenter/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "release",
+          "pathName": "pages/release/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "setting",
+          "pathName": "pages/setting/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  },
+  "libVersion": "3.12.1",
+  "projectname": "%E5%AD%9F%E6%B2%A2%E6%B4%B2%E6%89%8B%E8%B4%A6",
+  "setting": {
+    "urlCheck": true,
+    "coverView": true,
+    "lazyloadPlaceholderEnable": false,
+    "skylineRenderEnable": false,
+    "preloadBackgroundData": false,
+    "autoAudits": false,
+    "useApiHook": true,
+    "showShadowRootInWxmlPanel": true,
+    "useStaticServer": true,
+    "useLanDebug": false,
+    "showES6CompileOption": false,
+    "compileHotReLoad": true,
+    "bigPackageSizeSupport": false,
+    "checkInvalidKey": true,
+    "useIsolateContext": true,
+    "ignoreDevUnusedFiles": true
+  }
+}

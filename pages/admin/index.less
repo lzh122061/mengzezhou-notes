@@ -1,0 +1,225 @@
+page {
+  background-color: #f5f7fa;
+}
+
+.container {
+  padding: 20rpx;
+}
+
+/* 登录/无权限提示 */
+.login-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  
+  .tips {
+    margin-top: 40rpx;
+    font-size: 34rpx;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .sub-tips {
+    margin-top: 20rpx;
+    font-size: 26rpx;
+    color: #999;
+  }
+}
+
+/* 管理后台主体 */
+.admin-content {
+  padding-bottom: 60rpx;
+
+  .header {
+    font-size: 40rpx;
+    font-weight: 800;
+    color: #333;
+    margin: 20rpx 0 40rpx 10rpx;
+  }
+}
+
+.section {
+  margin-bottom: 50rpx;
+  
+  .section-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 20rpx;
+    padding-left: 10rpx;
+    border-left: 8rpx solid #07c160;
+  }
+}
+
+/* 卡片通用样式 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+    font-size: 30rpx;
+    font-weight: 600;
+    
+    .tag {
+      font-size: 22rpx;
+      background: #e6f7ff;
+      color: #1890ff;
+      padding: 4rpx 12rpx;
+      border-radius: 8rpx;
+    }
+  }
+}
+
+/* 图片上传区域 */
+.image-area {
+  width: 100%;
+  height: 360rpx;
+  background: #f0f2f5;
+  border-radius: 12rpx;
+  overflow: hidden;
+  position: relative;
+  border: 2rpx dashed #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .preview-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #999;
+    
+    text:first-child {
+      font-size: 60rpx;
+      margin-bottom: 10rpx;
+    }
+    text:last-child {
+      font-size: 26rpx;
+    }
+  }
+}
+
+.img-tips {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 15rpx;
+  text-align: center;
+}
+
+/* 价格管理区域 */
+.price-card {
+  .room-name {
+    font-size: 34rpx;
+    font-weight: bold;
+    margin-bottom: 30rpx;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20rpx;
+  }
+
+  /* 展示态 */
+  .price-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20rpx;
+    margin-bottom: 30rpx;
+    
+    .price-item {
+      font-size: 28rpx;
+      color: #333;
+      
+      .label {
+        color: #888;
+        margin-right: 10rpx;
+      }
+    }
+  }
+
+  .edit-btn {
+    width: 100%;
+    background: #f0f2f5;
+    color: #333;
+    font-weight: normal;
+  }
+
+  /* 编辑态 */
+  .input-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20rpx;
+    
+    text {
+      width: 80rpx;
+      font-size: 28rpx;
+      color: #666;
+    }
+    
+    input {
+      flex: 1;
+      background: #f8f8f8;
+      height: 70rpx;
+      padding: 0 20rpx;
+      border-radius: 8rpx;
+      font-size: 28rpx;
+    }
+  }
+
+  .btn-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30rpx;
+    gap: 20rpx;
+    
+    button {
+      margin: 0;
+    }
+  }
+}
+
+.footer-tips {
+  text-align: center;
+  color: #ccc;
+  font-size: 24rpx;
+  margin-top: 40rpx;
+}
+
+/* 新增：返回按钮样式 */
+.back-nav-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  padding-left: 30rpx;
+  background-color: #ffffff;
+  z-index: 1000;
+  font-size: 30rpx;
+  color: #333333;
+  border-bottom: 1rpx solid #eeeeee;
+  
+  .back-icon {
+    font-weight: bold;
+    margin-right: 10rpx;
+    font-size: 34rpx;
+  }
+}
+
+/* 调整原有容器，确保不被置顶的返回栏遮挡 */
+.admin-content {
+  padding-top: 20rpx;
+}

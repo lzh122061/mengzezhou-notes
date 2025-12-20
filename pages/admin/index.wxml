@@ -1,0 +1,84 @@
+<view class="container">
+ <view class="back-nav-bar" bindtap="goBackToIndex">
+    <text class="back-icon">〈</text>
+    <text>返回首页</text>
+ </view>
+
+<view wx:if="{{!isAdmin}}" class="login-box">
+  <icon type="info" size="60" color="#888"/>
+  <text class="tips">正在核验管理员身份...</text>
+  <text class="sub-tips">如果您是管理员，页面将自动刷新</text>
+</view>
+
+<view wx:else class="admin-content">
+  <view class="header">后台管理系统</view>
+
+  <view class="section">
+    <view class="section-title">1. 图片配置 (点击更换)</view>
+    
+    <block wx:for="{{imageList}}" wx:key="id">
+      <view class="card">
+        <view class="card-header">
+          <text>{{item.name}}</text>
+          <text class="tag">{{item.type === 'global' ? '全局' : '房间'}}</text>
+        </view>
+        
+        <view class="image-area" bindtap="handleUploadImage" data-index="{{index}}">
+          <image wx:if="{{item.currentUrl}}" src="{{item.currentUrl}}" mode="aspectFill" class="preview-img" />
+          <view wx:else class="placeholder">
+            <text>+</text>
+            <text>点击上传</text>
+          </view>
+        </view>
+        <view class="img-tips">建议尺寸: 16:9 或 4:3</view>
+      </view>
+    </block>
+  </view>
+
+  <view class="section">
+    <view class="section-title">2. 房价管理</view>
+
+    <block wx:for="{{roomList}}" wx:key="_id">
+      <view class="card price-card">
+        <view class="room-name">{{item.name}}</view>
+
+        <block wx:if="{{editingId === item._id}}">
+          <view class="input-row">
+            <text>日租:</text>
+            <input type="number" value="{{tempPrices.day}}" data-field="day" bindinput="handleInput" placeholder="0"/>
+          </view>
+          <view class="input-row">
+            <text>周租:</text>
+            <input type="number" value="{{tempPrices.week}}" data-field="week" bindinput="handleInput" placeholder="0"/>
+          </view>
+          <view class="input-row">
+            <text>半月:</text>
+            <input type="number" value="{{tempPrices.half}}" data-field="half" bindinput="handleInput" placeholder="0"/>
+          </view>
+          <view class="input-row">
+            <text>月租:</text>
+            <input type="number" value="{{tempPrices.month}}" data-field="month" bindinput="handleInput" placeholder="0"/>
+          </view>
+          <view class="btn-group">
+            <button size="mini" type="default" bindtap="cancelEdit">取消</button>
+            <button size="mini" type="primary" bindtap="savePrice" data-dbid="{{item._id}}">保存</button>
+          </view>
+        </block>
+
+        <block wx:else>
+          <view class="price-display">
+            <view class="price-item"><text class="label">日:</text> ¥{{item.price_day}}</view>
+            <view class="price-item"><text class="label">周:</text> ¥{{item.price_week}}</view>
+            <view class="price-item"><text class="label">半月:</text> ¥{{item.price_half_month}}</view>
+            <view class="price-item"><text class="label">月:</text> ¥{{item.price_month}}</view>
+          </view>
+          <button class="edit-btn" size="mini" bindtap="editPrice" data-item="{{item}}">修改价格</button>
+        </block>
+
+      </view>
+    </block>
+  </view>
+
+  <view class="footer-tips">--- 到底了 ---</view>
+</view>
+</view>

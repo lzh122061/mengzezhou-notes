@@ -1,0 +1,167 @@
+@theme-color: #3D553D;
+@bg-color: #ffffff;
+
+page {
+  background-color: #F2EDD0;
+  padding-bottom: 40rpx;
+}
+
+/* 返回键样式：适配不同机型刘海屏 */
+.nav-back {
+  position: fixed;
+  left: 30rpx;
+  /* 优先使用 safe-area-inset-top，兜底 20rpx */
+  top: 20rpx; 
+  top: calc(env(safe-area-inset-top) + 20rpx);
+  z-index: 1000;
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(61, 85, 61, 0.6); /* 调整为主题色半透明 */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  
+  .back-arrow {
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: bold;
+    margin-right: 4rpx;
+    margin-top: -2rpx;
+  }
+  
+  &:active {
+    opacity: 0.7;
+    background: rgba(61, 85, 61, 0.8);
+  }
+}
+
+.detail-container {
+  .banner-swiper {
+    width: 100%;
+    height: 1200rpx; 
+    .slide-media {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+
+  .main-card {
+    position: relative;
+    margin: -60rpx 24rpx 20rpx;
+    padding: 30rpx;
+    background: #a3a777; /* 橄榄绿背景 */
+    border-radius: 24rpx;
+    box-shadow: 0 4rpx 20rpx rgba(89, 107, 73, 0.4);
+    z-index: 10;
+    
+    .title-row .name {
+      font-size: 48rpx;
+      font-weight: 900;
+      color: #ffffff; /* 调整为白色以适配橄榄绿背景 */
+      text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
+    }
+    
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12rpx;
+      margin: 20rpx 0 30rpx;
+      .tag {
+        font-size: 22rpx;
+        color: #3D553D; /* 调整为主题色 */
+        background: rgba(255, 255, 255, 0.9); /* 调整为白色半透明 */
+        padding: 8rpx 18rpx;
+        border-radius: 8rpx;
+      }
+    }
+
+    /* 价格网格 */
+    .price-grid {
+      display: flex;
+      background: #fdfdfd;
+      border-radius: 16rpx;
+      padding: 24rpx 0;
+      border: 1rpx solid #eee;
+      
+      .price-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-right: 1rpx solid #eee;
+        
+        &:last-child { border-right: none; }
+        
+        .label { font-size: 22rpx; color: #7a8b7a; margin-bottom: 8rpx; } /* 调整为灰绿色 */
+        .price-box {
+          display: flex;
+          align-items: baseline;
+          font-weight: bold;
+          color: @theme-color; /* 调整为主题色 */
+          .currency { font-size: 24rpx; }
+          .amount { font-size: 36rpx; }
+        }
+        .time {
+          font-size: 20rpx;
+          color: @theme-color;
+          background: rgba(61, 85, 61, 0.08);
+          padding: 2rpx 8rpx;
+          border-radius: 4rpx;
+          margin-top: 4rpx;
+        }
+
+      }
+    }
+  }
+
+  .section-card {
+    margin: 0 24rpx 20rpx;
+    padding: 30rpx;
+    background: #fff;
+    border-radius: 20rpx;
+    
+    .section-title {
+      font-size: 30rpx;
+      font-weight: bold;
+      margin-bottom: 24rpx;
+      border-left: 8rpx solid @theme-color;
+      padding-left: 16rpx;
+      color: #2c3e2c; /* 调整为深绿色 */
+    }
+    
+    .facility-grid {
+      display: flex;
+      flex-wrap: wrap;
+      .item {
+        width: 33.33%;
+        margin-bottom: 20rpx;
+        font-size: 26rpx;
+        color: #5c665c; /* 调整为协调的灰绿色 */
+        .icon { color: @theme-color; margin-right: 8rpx; }
+      }
+    }
+    
+    .desc-text {
+      font-size: 28rpx;
+      color: #555;
+      line-height: 1.8;
+    }
+  }
+
+  .note-row {
+    margin: 0 44rpx 30rpx;
+    text-align: left;
+    text {
+      font-size: 26rpx;
+      color: #7a8b7a; /* 调整为协调的浅灰绿 */
+      font-weight: normal;
+      line-height: 1.5;
+      display: block;
+    }
+  }
+
+  .safe-bottom { height: 40rpx; }
+}

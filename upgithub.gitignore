@@ -1,0 +1,15 @@
+# 依赖包
+node_modules/
+
+# 微信开发者工具特定配置 (包含个人配置和密钥，强烈建议忽略)
+project.private.config.json
+project.config.json.user
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,126 @@
+@theme-color: #3D553D; /* 主题深绿 */
+
+page {
+  background-color: #F2EDD0; /* 米色背景 */
+}
+
+.container {
+  min-height: 100vh;
+  background-color: #F2EDD0; /* 米色背景 */
+  padding: 30rpx;
+  
+  /* [修改] 增加底部内边距，防止内容被底部导航栏遮挡 */
+  /* 100rpx(导航栏高度) + 40rpx(间距) + 安全距离 */
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  
+  box-sizing: border-box; 
+}
+
+.notice-content {
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx;
+  /* 柔和的橄榄绿阴影，增加层次感 */
+  box-shadow: 0 8rpx 24rpx rgba(89, 107, 73, 0.1); 
+
+  .header-title {
+    font-size: 44rpx;
+    font-weight: 900;
+    text-align: center;
+    color: @theme-color;
+    margin-bottom: 70rpx;
+    letter-spacing: 4rpx;
+    position: relative;
+
+    /* 标题下方加一个小装饰横线 */
+    &::after {
+      content: '';
+      display: block;
+      width: 60rpx;
+      height: 6rpx;
+      background-color: #A3A777; /* 橄榄绿 */
+      margin: 20rpx auto 0;
+      border-radius: 3rpx;
+    }
+  }
+
+  .section {
+    margin-bottom: 50rpx;
+
+    .item-title {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #2c3e2c; /* 深橄榄绿文字 */
+      margin-bottom: 16rpx;
+      padding-left: 20rpx;
+      /* 左侧装饰竖线，与首页风格统一 */
+      border-left: 8rpx solid @theme-color; 
+    }
+
+    .item-desc {
+      font-size: 28rpx;
+      color: #555; /* 正文深灰，易于阅读 */
+      line-height: 1.7;
+      text-align: justify; /* 两端对齐，排版更整齐 */
+      display: block;
+    }
+  }
+
+  .footer-msg {
+    margin-top: 100rpx;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    
+    text {
+      font-size: 26rpx;
+      color: #7a8b7a; /* 浅灰绿，保持低调 */
+      line-height: 1.6;
+      font-weight: 500;
+      letter-spacing: 2rpx;
+    }
+    
+    /* 英文部分稍微小一点 */
+    text:last-child {
+      font-size: 22rpx;
+      margin-top: 8rpx;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+  }
+}
+
+/* === 修改：底部导航栏适配新的 WXML 结构 (.custom-tabbar) === */
+.custom-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100rpx; 
+  background-color: #A3A777; /* 背景：橄榄绿 */
+  border-top: 1rpx solid #f0f0f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 1000;
+  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.02);
+
+  .tab-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    
+    font-size: 32rpx;
+    color: #030303; /* 未选中：黑色 */
+    font-weight: 500;
+
+    /* 选中高亮 */
+    &.active {
+      color: #3D553D; /* 选中：主题深绿 */
+      font-weight: bold;
+    }
+  }
+}

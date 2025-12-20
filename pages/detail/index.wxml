@@ -1,0 +1,87 @@
+<view class="detail-container">
+  <view class="nav-back" bindtap="goBack">
+    <text class="back-arrow">❮</text>
+  </view>
+
+  <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
+    <block wx:for="{{room.images}}" wx:key="*this">
+      <swiper-item>
+        <image src="{{item}}" mode="aspectFill" class="slide-media" />
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <view class="main-card">
+    <view class="title-row">
+      <text class="name">{{room.name}}</text>
+    </view>
+    
+    <view class="tags-row" wx:if="{{room.tags}}">
+      <text class="tag" wx:for="{{room.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+
+    <view class="price-grid" wx:if="{{room.price_day}}">
+      <view class="price-item">
+        <text class="label">日租</text>
+        <view class="price-box">
+          <text class="currency">¥</text>
+          <text class="amount">{{room.price_day || '-'}}</text>
+        </view>
+        <text class="time">1晚</text>
+      </view>
+
+      <view class="price-item">
+        <text class="label">周租</text>
+        <view class="price-box">
+          <text class="currency">¥</text>
+          <text class="amount">{{room.price_week || '-'}}</text>
+        </view>
+        <text class="time">7晚</text>
+      </view>
+
+      <view class="price-item">
+        <text class="label">半月租</text>
+        <view class="price-box">
+          <text class="currency">¥</text>
+          <text class="amount">{{room.price_half_month || '-'}}</text>
+        </view>
+        <text class="time">15晚</text>
+      </view>
+
+      <view class="price-item highlight">
+        <text class="label">月租</text>
+        <view class="price-box">
+          <text class="currency">¥</text>
+          <text class="amount">{{room.price_month || '-'}}</text>
+        </view>
+        <text class="time">30晚</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">配套设施</view>
+    <view class="facility-grid">
+      <block wx:if="{{room.facilities && room.facilities.length > 0}}">
+        <view class="item" wx:for="{{room.facilities}}" wx:key="*this">
+          <text class="icon">✓</text>
+          <text class="text">{{item}}</text>
+        </view>
+      </block>
+      <block wx:else>
+         <text style="font-size:26rpx; color:#999;">全套高品质家私家电</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="note-row" wx:if="{{room.price_day}}">
+    <text>注：日租及周租提供一次性用品，半月租及月租需自行购买一次性用品</text>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">空间介绍</view>
+    <text class="desc-text">{{room.desc || '暂无详细介绍'}}</text>
+  </view>
+  
+  <view class="safe-bottom"></view>
+</view>

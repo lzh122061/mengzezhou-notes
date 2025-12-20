@@ -1,0 +1,157 @@
+// === [自定义字体设置区域] ===
+// 1. 将您的字体文件(.woff2或.woff)上传到云存储，获得 https 链接
+// 2. 取消下面 @font-face 的注释，并替换 url
+
+/* @font-face {
+  font-family: 'CustomFont'; // 字悦影印宋
+  src: url('https://636c-cloud1-7gvskpoo2a3897dc-1392473051.tcb.qcloud.la/fonts/ziyueyinyingsong-s-Regular.woff2?sign=de15b640ce49c6b3c99f87acc831800b&t=1766150720') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+*/
+
+.container {
+  min-height: 100vh;
+  background-color: #F2EDD0;
+  display: flex;
+  flex-direction: column;
+  
+  // === [这里应用字体] ===
+  // 全局字体已在 app.less 中设置，此处无需重复，除非需要覆盖
+
+  .main-content {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  // === 适配 Swiper 轮播图 ===
+  // 3:4 海报 (750 * 1.333 ≈ 1000rpx)
+  .poster-section {
+    width: 100%;
+    height: 1000rpx; // 必须给 Swiper 设置高度
+
+    .top-poster {
+      width: 100%;
+      height: 100%; // 图片占满 Swiper 的高度
+      display: block;
+    }
+
+    // === 修改 Swiper 指示点样式 ===
+    // 默认未选中状态 (小圆点)
+    .wx-swiper-dot {
+      width: 12rpx;
+      height: 12rpx;
+      background: rgba(255, 255, 255, 0.5); // 半透明白色
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    // 当前选中状态 (长条形)
+    .wx-swiper-dot-active {
+      width: 40rpx;       // 宽度拉长
+      height: 12rpx;      // 高度保持一致
+      background: #ffffff; // 选中变纯白
+      border-radius: 6rpx; // 圆角
+    }
+  }
+
+  // === 修改文字区域样式 ===
+  .policy-bar {
+    padding: 40rpx 40rpx 20rpx 40rpx;
+    
+    // === [修改点] 改为居中对齐 ===
+    text-align: center; 
+    
+    text {
+      font-size: 28rpx;
+      
+      // 保持之前的深灰色风格
+      color: #333333; 
+      
+      line-height: 1.8; 
+      font-weight: 400; 
+      letter-spacing: 1rpx;
+      
+      // 确保文字块级显示，有助于处理换行
+      display: block; 
+    }
+  }
+
+  .room-grid {
+    padding: 10rpx 24rpx;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .room-card {
+      width: 342rpx;
+      background: #e0dab0;
+      border-radius: 16rpx;
+      overflow: hidden;
+      margin-bottom: 24rpx;
+      box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.06); 
+
+      .room-img {
+        width: 100%;
+        height: 256rpx;
+        display: block;
+      }
+
+      .card-body {
+        padding: 20rpx 16rpx;
+        .card-name {
+          display: block;
+          font-size: 28rpx;
+          font-weight: bold;
+          color: #112116;
+          margin-bottom: 8rpx;
+        }
+        .card-tag {
+          font-size: 22rpx;
+          color: #7d805c;
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          
+          /* [修改] 字体改为微软雅黑 */
+          font-family: "Microsoft YaHei", sans-serif;
+        }
+      }
+    }
+  }
+
+  .footer-spacer {
+    height: 120rpx;
+  }
+
+  // 底部导航栏
+  .custom-tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100rpx;
+    background-color: #A3A777;
+    display: flex;
+    border-top: 1rpx solid #f5f5f5;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 1000;
+    box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.02);
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28rpx;
+      color: #000000;
+      transition: all 0.2s ease;
+      
+      &.active {
+        color: #3D553D;
+        font-weight: 600;
+      }
+    }
+  }
+}

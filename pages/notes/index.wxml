@@ -1,0 +1,94 @@
+<view class="container">
+  <view class="notice-content">
+    <view class="header-title">入住前的一些碎碎念 📝</view>
+    
+    <!-- 1. 关于房间 -->
+    <view class="section">
+      <view class="item-title" style="font-size: 34rpx; border-left: none; padding-left: 0;">🏠 关于房间</view>
+      <text class="item-desc">院子共有8间房（1间套房+7间单间），每间约30㎡。</text>
+      <view class="item-desc" style="margin-top: 10rpx;">
+        <text style="font-weight: bold; color: #333;">标配：</text> 独立卫浴、空调、24小时热水（带大功率加热，阴天无忧）、风量超大的吹风机。
+      </view>
+      <view class="item-desc">
+        <text style="font-weight: bold; color: #333;">水源：</text> 全院引入苍山直引山泉水。
+      </view>
+    </view>
+
+    <!-- 2. 预订前的小约定 -->
+    <view class="section">
+      <view class="item-title" style="font-size: 34rpx; border-left: none; padding-left: 0;">⚠️ 预订前的小约定（必读版）</view>
+      <text class="item-desc" style="margin-bottom: 20rpx; color: #666;">为了避免误会，请确认能接受以下几点再下单哦：</text>
+
+      <view class="item-title" style="font-size: 30rpx;">关于定金</view>
+      <text class="item-desc">预定需支付一晚房费作为定金。定金付讫不予退款，且不接受转租。请务必确定好行程。</text>
+
+      <view class="item-title" style="font-size: 30rpx; margin-top: 20rpx;">接待限制</view>
+      <view class="item-desc">
+        <text style="font-weight: bold; color: #333;">关于孩子：</text> 因院子装修及缺乏相关接待经验，为确安全，暂不接待15岁以下儿童，敬请谅解。
+      </view>
+      <view class="item-desc" style="margin-top: 8rpx;">
+        <text style="font-weight: bold; color: #333;">关于宠物：</text> 虽然我们有猫，但暂不具备接待客人宠物入住的条件，不可携带宠物。
+      </view>
+
+      <view class="item-title" style="font-size: 30rpx; margin-top: 20rpx;">入住规范</view>
+      <view class="item-desc">
+        <text style="font-weight: bold; color: #333;">全院禁烟：</text> 包含房间及公区（含电子烟）。
+      </view>
+      <view class="item-desc">
+        <text style="font-weight: bold; color: #333;">押金：</text> 入住需缴纳 500元/间 押金（含对房屋及院内设施的担保）。
+      </view>
+      <view class="item-desc">
+        <text style="font-weight: bold; color: #333;">时间：</text> 入住 14:00 后，退房 12:00 前。（若房间提前空出可灵活安排）。
+      </view>
+    </view>
+
+    <!-- 3. 关于出行与位置 -->
+    <view class="section">
+      <view class="item-title" style="font-size: 34rpx; border-left: none; padding-left: 0;">🛵 关于出行与位置</view>
+      <text class="item-desc" style="margin-bottom: 20rpx;">大理属于“大农村”，公共交通不便，建议调整心理预期：</text>
+      
+      <view class="item-desc">
+        <text style="font-weight: bold; color: #333;">位置：</text> 距古城4.8公里，距洱海廊道2公里。虽然不在古城边，但这里不堵车（旺季优势巨大！），打车直达门口。
+      </view>
+      <view class="item-desc" style="margin-top: 10rpx;">
+        <text style="font-weight: bold; color: #333;">交通福利：</text> 我们免费提供6辆电动车供住客使用！
+      </view>
+      <text class="item-desc" style="color: #666; font-size: 26rpx; margin-left: 10rpx;">· 骑行至古城约15-20分钟。\n· 骑行至洱海边约8分钟。</text>
+    </view>
+
+    <!-- 4. 院子里的生活设施 -->
+    <view class="section">
+      <view class="item-title" style="font-size: 34rpx; border-left: none; padding-left: 0;">🥘 院子里的生活设施</view>
+      <text class="item-desc" style="margin-bottom: 20rpx;">我们尽量提供便利，让这里像家一样：</text>
+
+      <view class="item-title" style="font-size: 30rpx;">1. 免费福利区</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">厨房：</text> 免费使用！提供锅碗瓢盆及米面油盐等基础调料（无需自购）。</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">水电网：</text> 全免。</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">洗衣：</text> 公用洗衣机1台。</view>
+
+      <view class="item-title" style="font-size: 30rpx; margin-top: 20rpx;">2. 耗材说明（请注意区分）</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">🎐 日租/周租的朋友：</text> 提供一次性生活用品（含马桶垫）。</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">📅 半月租/月租的朋友：</text> 需自行购买纸巾、洗衣液、牙膏牙刷及饮用水等消耗品。</view>
+    </view>
+
+    <!-- 5. 周边配套 -->
+    <view class="section">
+      <view class="item-title" style="font-size: 34rpx; border-left: none; padding-left: 0;">🛒 周边配套</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">外卖/快递：</text> 美团外卖、跑腿均可直达；多多买菜次日达（很方便）。</view>
+      <view class="item-desc"><text style="font-weight: bold; color: #333;">日常购物：</text> 村内有小卖部；2公里外有“双鸳村小菜市场”；1公里内有小饭店及网红“六元咖啡”。</view>
+      <view class="item-desc" style="margin-top: 12rpx; color: #888; font-size: 24rpx; font-style: italic;">注： 周边以居住为主，无大型商业设施，主打安静闲适。</view>
+    </view>
+
+    <view class="footer-msg">
+      <text>祝您拥有一段美好的旅程</text>
+      <text>Have a nice trip</text>
+    </view>
+  </view>
+
+  <view class="custom-tabbar">
+    <view class="tab-item" bindtap="navToHome">看个房间</view>
+    <view class="tab-item active" bindtap="navToNotes">归家手记</view>
+    <view class="tab-item" bindtap="navToMassage">一起分享</view>
+    <view class="tab-item" bindtap="navToMy">我的</view>
+  </view>
+</view>

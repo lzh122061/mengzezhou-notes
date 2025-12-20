@@ -1,0 +1,18 @@
+<view class="container">
+  <view class="header">修改首图及详情图 (共{{list.length}}个)</view>
+
+  <view class="image-list">
+    <block wx:for="{{list}}" wx:key="id">
+      <view class="image-item">
+        <view class="label">{{item.name}}</view>
+        <view class="preview" bindtap="previewImage" data-url="{{item.currentUrl}}">
+          <image wx:if="{{item.currentUrl}}" src="{{item.currentUrl}}" mode="aspectFill"></image>
+          <view wx:else class="placeholder">暂无图片</view>
+        </view>
+        <view class="upload-btn" bindtap="handleUpload" data-index="{{index}}" data-type="{{item.type}}" data-key="{{item.key}}">
+          更换图片
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

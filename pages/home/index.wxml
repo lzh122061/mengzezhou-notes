@@ -1,0 +1,56 @@
+<view class="container">
+  <view style="height: {{navHeight}}px"></view>
+
+  <scroll-view scroll-y class="main-content">
+    
+    <swiper 
+      class="poster-section" 
+      autoplay="true" 
+      circular="true" 
+      interval="3000" 
+      duration="500" 
+      indicator-dots="{{banners.length > 1}}"
+      indicator-color="rgba(255, 255, 255, 0.5)"
+      indicator-active-color="#ffffff"
+    >
+      <block wx:for="{{banners}}" wx:key="*this">
+        <swiper-item>
+          <image class="top-poster" src="{{item}}" mode="aspectFill"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="policy-bar">
+      <text>*为了保证居住体验</text>
+      <text>民宿禁止携带15岁以下儿童、宠物以及全域禁烟。</text>
+    </view>
+
+    <view class="room-grid">
+      <view 
+        class="room-card" 
+        wx:for="{{roomList}}" 
+        wx:key="id" 
+        bindtap="goToDetail" 
+        data-id="{{item.id}}"
+      >
+      <image 
+        class="room-img" 
+        src="{{item.img}}" 
+        mode="aspectFill" 
+      />
+        <view class="card-body">
+          <text class="card-name">{{item.name}}</text>
+          <text class="card-tag">{{item.tag}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="footer-spacer"></view>
+  </scroll-view>
+
+  <view class="custom-tabbar">
+    <view class="tab-item active">看个房间</view>
+    <view class="tab-item" bindtap="navToNotes">归家手记</view>
+    <view class="tab-item" bindtap="navToMassage">一起分享</view>
+    <view class="tab-item" bindtap="navToMy">我的</view>
+  </view>
+</view>

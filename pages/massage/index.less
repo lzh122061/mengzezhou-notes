@@ -1,0 +1,202 @@
+@theme-color: #3D553D; /* 主题深绿 */
+
+page {
+  background-color: #F2EDD0; /* 米色背景 */
+}
+
+/* 主容器样式 */
+.container {
+  min-height: 100vh;
+  background-color: #F2EDD0; /* 米色背景 */
+  display: flex;
+  flex-direction: column;
+
+  .main-content {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* 顶部 Tab 样式 */
+  .tabs-nav {
+    display: flex;
+    background: #fff;
+    padding: 20rpx 0;
+    margin-bottom: 10rpx;
+    box-shadow: 0 4rpx 10rpx rgba(89, 107, 73, 0.05);
+    
+    .tab-item-top {
+      flex: 1;
+      text-align: center;
+      font-size: 28rpx;
+      color: #7a8b7a; /* 未选中：灰绿色 */
+      position: relative;
+      padding-bottom: 10rpx;
+      
+      &.active {
+        color: @theme-color; /* 选中：主题深绿 */
+        font-weight: bold;
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 40rpx;
+          height: 4rpx;
+          background-color: @theme-color;
+          border-radius: 2rpx;
+        }
+      }
+    }
+  }
+
+  /* === [修改] 瀑布流列表样式 === */
+  .post-list {
+    padding: 20rpx;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 双列两端对齐 */
+    align-items: flex-start;
+    
+    .post-card {
+      width: 48%; /* 双列宽度 */
+      background: #fff;
+      border-radius: 16rpx;
+      margin-bottom: 24rpx;
+      overflow: hidden;
+      box-shadow: 0 4rpx 16rpx rgba(89, 107, 73, 0.1);
+      display: flex;
+      flex-direction: column;
+      
+      /* 图片区域 (4:3 比例) */
+      .card-img-wrap {
+        width: 100%;
+        height: 250rpx; /* 约等于宽度的 0.75 倍，视觉上接近 4:3 */
+        position: relative;
+        background-color: #E9E4BA;
+
+        .cover-img {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+
+        .img-count {
+          position: absolute;
+          right: 10rpx;
+          top: 10rpx;
+          background: rgba(0,0,0,0.5);
+          color: #fff;
+          font-size: 20rpx;
+          padding: 2rpx 8rpx;
+          border-radius: 8rpx;
+        }
+      }
+      
+      /* 内容区域 */
+      .post-content {
+        padding: 16rpx;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        
+        .text-desc { 
+          font-size: 26rpx; 
+          color: #333;
+          line-height: 1.4;
+          margin-bottom: 16rpx;
+          /* 限制显示2行 */
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .bottom-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .user-name { 
+            font-size: 22rpx; 
+            color: @theme-color;
+            font-weight: bold;
+            max-width: 70%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .comment-icon {
+            font-size: 22rpx;
+            color: #999;
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      width: 100%;
+      text-align: center;
+      padding: 100rpx 0;
+      color: #999;
+      font-size: 26rpx;
+    }
+  }
+
+  .footer-spacer { height: 120rpx; }
+}
+
+/* === 悬浮元素 === */
+
+/* 右下角发布按钮 */
+.publish-btn {
+  position: fixed;
+  right: 40rpx;
+  bottom: 160rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: @theme-color; /* 按钮背景：主题深绿 */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 60rpx;
+  box-shadow: 0 6rpx 20rpx rgba(61, 85, 61, 0.4);
+  z-index: 100;
+}
+
+/* 底部导航栏 */
+.custom-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #A3A777; /* 背景：橄榄绿 */
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-top: 1rpx solid #f0f0f0;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 1000;
+  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.02);
+
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    font-size: 28rpx;
+    color: #000000; /* 未选中：黑色 */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.active {
+      color: #3D553D; /* 选中：主题深绿 */
+      font-weight: bold;
+    }
+  }
+}

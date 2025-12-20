@@ -1,0 +1,87 @@
+<view class="container">
+  <view style="height: {{navHeight}}px"></view>
+
+  <scroll-view scroll-y class="main-content">
+    <view class="tabs-nav">
+      <view 
+        wx:for="{{tabs}}" 
+        wx:key="index" 
+        class="tab-item-top {{activeTab == index ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-index="{{index}}"
+      >{{item}}</view>
+    </view>
+
+    <!-- 瀑布流列表 -->
+    <view class="post-list">
+      <view class="post-card" wx:for="{{posts}}" wx:key="_id" wx:for-index="idx">
+        
+        <!-- 1. 图片区域 (只显示首图，保持 4:3 比例) -->
+        <view class="card-img-wrap">
+          <image 
+            class="cover-img" 
+            src="{{item.images[0] || item.image}}" 
+            mode="aspectFill" 
+            catchtap="previewImage" 
+            data-current="{{item.images[0] || item.image}}" 
+            data-urls="{{item.images || [item.image]}}"
+          ></image>
+          <!-- 多图标识 -->
+          <view class="img-count" wx:if="{{item.images && item.images.length > 1}}">
+            <text>1/{{item.images.length}}</text>
+          </view>
+        </view>
+
+        <!-- 2. 内容区域 -->
+        <view class="post-content">
+          <text class="text-desc">{{item.content}}</text>
+          
+          <view class="bottom-info">
+            <text class="user-name">{{item.userName}}</text>
+            
+            <!-- 右侧操作区：包含删除和评论 -->
+            <view class="action-right" style="display: flex; align-items: center;">
+              
+              <!-- === [新增] 删除按钮 === -->
+              <!-- 只有当(当前用户是作者) 或 (当前用户是管理员) 时显示 -->
+              <!-- 请确保 JS data 中有 openid 和 isAdmin 变量 -->
+              <view 
+                class="delete-icon" 
+                catchtap="handleDelete" 
+                data-id="{{item._id}}" 
+                data-index="{{idx}}"
+                wx:if="{{item._openid === openid || isAdmin}}"
+                style="margin-right: 12px; font-size: 12px; color: #999;"
+              >
+                <text>删除</text>
+              </view>
+
+              <view class="comment-icon" bindtap="handleComment" data-id="{{item._id}}" data-index="{{idx}}">
+                <text>💬 {{item.comments.length || 0}}</text>
+              </view>
+            </view>
+
+          </view>
+        </view>
+
+      </view>
+      
+      <view wx:if="{{posts.length === 0}}" class="empty-state">
+        <text>暂无内容，点击右下角发布</text>
+      </view>
+    </view>
+
+    <view class="publish-btn" bindtap="handlePublish">
+      <text>+</text>
+    </view>
+    
+    <view class="footer-spacer"></view>
+  </scroll-view>
+
+  <view class="custom-tabbar">
+    <view class="tab-item" bindtap="navToHome">看个房间</view>
+    <view class="tab-item" bindtap="navToNotes">归家手记</view>
+    <view class="tab-item active">一起分享</view>
+    <view class="tab-item" bindtap="navToMy">我的</view>
+  </view>
+</view>
