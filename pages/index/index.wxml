@@ -1,48 +1,34 @@
 <view class="container">
-  <!-- 
-    直接在 WXML 中通过 style 属性设置高度。
-    env(safe-area-inset-top) 获取状态栏高度，
-    + 100rpx 是为了避开胶囊按钮和留出一点呼吸感。
-  -->
   <view class="safe-top" style="height: calc(env(safe-area-inset-top) + 100rpx); min-height: 180rpx;"></view>
 
-  <!-- ============================================ -->
-  <!-- 1. 头部用户信息区域 -->
-  <!-- ============================================ -->
   <view class="profile-header">
-    <!-- 头像 -->
     <view class="avatar-wrap" bindtap="handleLogin">
       <view class="avatar-inner">
-        <open-data type="userAvatarUrl"></open-data>
+        <image wx:if="{{isLogged && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" mode="aspectFill" style="width:100%; height:100%;"></image>
+        <image wx:else src="https://img.icons8.com/bubbles/200/user-male-circle.png" mode="aspectFill" style="width:100%; height:100%;"></image>
       </view>
     </view>
     
-    <!-- 昵称/登录提示 -->
     <view class="info-wrap" bindtap="handleLogin">
       <view class="nickname">
-        <open-data wx:if="{{isLogged}}" type="userNickName"></open-data>
+        <text wx:if="{{isLogged}}">{{userInfo.nickName}}</text>
         <text wx:else>点击登录</text>
       </view>
       <view class="status-tag" wx:if="{{isLogged}}">
-        <text>{{isAdmin ? '管理员' : '认证住客'}}</text>
+        <text>{{isAdmin ? '管理员' : '认证房客'}}</text>
       </view>
     </view>
   </view>
 
-  <!-- ============================================ -->
-  <!-- 2. 功能列表区域 -->
-  <!-- ============================================ -->
   <view class="menu-list">
-    <!-- 入住须知 -->
     <view class="menu-item" bindtap="showNotice">
       <view class="item-left">
         <text class="icon">📝</text>
-        <text class="text">入住须知</text>
+        <text class="text">别点我</text>
       </view>
       <text class="arrow">></text>
     </view>
 
-    <!-- 联系管家 -->
     <view class="menu-item" bindtap="handleContact">
       <view class="item-left">
         <text class="icon">📞</text>
@@ -52,21 +38,54 @@
     </view>
   </view>
 
-  <!-- ============================================ -->
-  <!-- 3. 管理员入口 (仅管理员验证成功后显示) -->
-  <!-- ============================================ -->
   <view class="admin-action" wx:if="{{isAdmin}}">
     <button class="admin-btn" bindtap="goToAdminPage">点击进入管理员后台</button>
   </view>
 
-  <!-- ============================================ -->
-  <!-- 4. 底部导航栏 (固定在底部) -->
-  <!-- ============================================ -->
   <view class="custom-tabbar">
     <view class="tab-item" bindtap="navToHome">看个房间</view>
     <view class="tab-item" bindtap="navToNotes">归家手记</view>
     <view class="tab-item" bindtap="navToMassage">一起分享</view>
     <view class="tab-item active">我的</view>
+  </view>
+
+  <view class="custom-modal" wx:if="{{showNoticeModal}}" catchtouchmove="true">
+    <view class="modal-mask" bindtap="closeNotice"></view>
+    <view class="modal-content">
+      <view class="modal-header">提示</view>
+      <image class="cheeky-img" src="https://img.icons8.com/bubbles/200/cat.png" mode="aspectFit"></image>
+      <view class="modal-text">{{randomNotice}}</view>
+      <button class="modal-btn" bindtap="closeNotice">知道了</button>
+    </view>
+  </view>
+
+  <view class="custom-modal" wx:if="{{showContactModal}}" catchtouchmove="true">
+    <view class="modal-mask" bindtap="closeContactModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">联系方式</view>
+      <image class="cheeky-img" src="https://img.icons8.com/bubbles/200/phone.png" mode="aspectFit"></image>
+      <view class="modal-text"><text>非必要勿打电话\n17787897998</text></view>
+      <view class="btn-row">
+        <button class="modal-btn cancel" bindtap="closeContactModal">取消</button>
+        <button class="modal-btn confirm" bindtap="confirmCall">呼叫</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="custom-modal" wx:if="{{showLoginEditModal}}">
+    <view class="modal-mask"></view>
+    <view class="modal-content">
+      <view class="modal-header">完善信息</view>
+      
+      <button class="avatar-button" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar" style="padding:0; width:160rpx; height:160rpx; border-radius:50%; margin-bottom:30rpx;">
+        <image class="modal-avatar" src="{{tempAvatarUrl || 'https://img.icons8.com/bubbles/200/user-male-circle.png'}}" style="width:160rpx; height:160rpx; border-radius:50%;"></image>
+      </button>
+      <text style="font-size:24rpx; color:#7a8b7a; margin-bottom:30rpx;">点击圆圈选择头像</text>
+
+      <input type="nickname" class="nickname-input" placeholder="请在此输入昵称" bindblur="onInputNickname" style="width:80%; height:80rpx; background:#f2edd0; border-radius:12rpx; text-align:center; margin-bottom:40rpx;" />
+
+      <button class="modal-btn" bindtap="saveUserInfoAndLogin">保存并登录</button>
+    </view>
   </view>
 
 </view>

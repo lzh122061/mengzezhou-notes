@@ -66,7 +66,7 @@ Page({
     });
   },
 
-  // 在发布界面内点击添加照片
+  // 在发布界面内点击添加照片 (已添加压缩逻辑)
   onAddImage() {
     const currentCount = this.data.tempPublishImages.length;
     if (currentCount >= 9) {
@@ -77,10 +77,30 @@ Page({
     wx.chooseMedia({
       count: 9 - currentCount,
       mediaType: ['image'],
+      sizeType: ['compressed'], // 优先选择压缩图
       success: (res) => {
-        const newPaths = res.tempFiles.map(file => file.tempFilePath);
-        this.setData({
-          tempPublishImages: [...this.data.tempPublishImages, ...newPaths]
+        const tempFiles = res.tempFiles;
+        wx.showLoading({ title: '处理图片中...', mask: true });
+
+        // 针对选择的每一张图片进行压缩处理
+        const compressTasks = tempFiles.map(file => {
+          return new Promise((resolve) => {
+            wx.compressImage({
+              src: file.tempFilePath,
+              quality: 80, // 压缩质量 0-100
+              success: (cRes) => resolve(cRes.tempFilePath),
+              fail: () => resolve(file.tempFilePath) // 压缩失败则使用原路径
+            });
+          });
+        });
+
+        Promise.all(compressTasks).then(compressedPaths => {
+          this.setData({
+            tempPublishImages: [...this.data.tempPublishImages, ...compressedPaths]
+          });
+          wx.hideLoading();
+        }).catch(() => {
+          wx.hideLoading();
         });
       }
     });
@@ -166,6 +186,7 @@ Page({
         content, 
         images: fileIDs,
         comments: [], 
+        likes: [], // 初始化点赞数组
         createTime: db.serverDate()
       },
       success: () => {
@@ -306,7 +327,14 @@ Page({
       .orderBy('createTime', 'desc')
       .get()
       .then(res => {
-        this.setData({ posts: res.data, loading: false });
+        // 处理点赞状态：检查当前用户是否在点赞数组中
+        const posts = res.data.map(item => {
+          return {
+            ...item,
+            isLiked: (item.likes || []).includes(this.data.openid)
+          };
+        });
+        this.setData({ posts, loading: false });
       })
       .catch(() => {
         this.setData({ loading: false });
@@ -349,49 +377,81 @@ Page({
         wx.showToast({
           title: '删除失败',
           icon: 'error',
-          duration: 1000
+          padding: 1000
         });
       }, 2000);
     });
   },
 
-  handleComment(e) {
+  // --- 替换后的云函数点赞逻辑 ---
+  handleLike(e) {
     const { id, index } = e.currentTarget.dataset;
-    wx.showModal({
-      title: '发表评论', 
-      editable: true,
-      success: (res) => {
-        if (res.confirm && res.content) {
-          this.submitComment(id, index, res.content);
-        }
-      }
-    });
-  },
+    const { openid, posts, selectedPost } = this.data;
 
-  submitComment(postId, index, content) {
-    wx.showLoading({ title: '提交中' });
-    
-    let user = "认证房客";
-    if (this.data.isAdmin) {
-      user = "刘不行";
-    } else {
-      const userInfo = wx.getStorageSync('userInfo');
-      if (userInfo && userInfo.nickName) {
-        user = userInfo.nickName;
-      }
+    if (!openid) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
     }
 
-    const newComment = { userName: user, content, replyTo: null, time: Date.now() };
-    db.collection('posts').doc(postId).update({
-      data: { comments: db.command.push(newComment) }
-    }).then(() => {
-      wx.hideLoading();
-      wx.showToast({ title: '评论成功' });
-      const key = `posts[${index}].comments`;
-      this.setData({ [key]: [...(this.data.posts[index].comments || []), newComment] });
+    // 确定当前操作的帖子对象
+    const isFromDetail = index === 'detail';
+    const targetPost = isFromDetail ? selectedPost : posts[index];
+    
+    // 获取当前点赞状态
+    const oldIsLiked = targetPost.isLiked;
+    let newLikes = [...(targetPost.likes || [])];
+
+    // 乐观更新：本地先修改数据
+    if (oldIsLiked) {
+      // 之前赞了，现在取消 -> 移除 openid
+      newLikes = newLikes.filter(uid => uid !== openid);
+    } else {
+      // 之前没赞，现在点赞 -> 添加 openid
+      newLikes.push(openid);
+    }
+
+    const updatedPost = { 
+      ...targetPost, 
+      isLiked: !oldIsLiked, 
+      likes: newLikes 
+    };
+
+    // 立即更新前端 UI (不等云函数返回)
+    if (isFromDetail) {
+      const listIdx = this.data.selectedIndex;
+      this.setData({
+        selectedPost: updatedPost,
+        [`posts[${listIdx}]`]: updatedPost // 详情页操作同步更新列表
+      });
+    } else {
+      this.setData({
+        [`posts[${index}]`]: updatedPost
+      });
+    }
+
+    // 后台调用云函数更新真实数据库
+    wx.cloud.callFunction({
+      name: 'handleLike', // 确保你已部署这个云函数
+      data: { postId: id }
+    }).then(res => {
+      console.log('云函数更新成功', res);
     }).catch(err => {
-      console.error(err);
-      wx.hideLoading();
+      console.error('云函数更新失败', err);
+      // 如果失败，回滚 UI 状态
+      wx.showToast({ title: '点赞失败', icon: 'none' });
+      const originalPost = { ...targetPost, isLiked: oldIsLiked, likes: targetPost.likes };
+      
+      if (isFromDetail) {
+        const listIdx = this.data.selectedIndex;
+        this.setData({
+          selectedPost: originalPost,
+          [`posts[${listIdx}]`]: originalPost
+        });
+      } else {
+        this.setData({
+          [`posts[${index}]`]: originalPost
+        });
+      }
     });
   },
 

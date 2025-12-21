@@ -1,14 +1,11 @@
 <view class="container">
-  <!-- 顶部状态栏占位 -->
   <view style="height: {{navHeight}}px"></view>
 
   <scroll-view scroll-y class="main-content">
-    <!-- 顶部选项卡 -->
     <view class="tabs-nav">
       <view wx:for="{{tabs}}" wx:key="index" class="tab-item-top {{activeTab == index ? 'active' : ''}}" bindtap="switchTab" data-index="{{index}}">{{item}}</view>
     </view>
 
-    <!-- 瀑布流列表 -->
     <view class="post-list">
       <view class="post-card" wx:for="{{posts}}" wx:key="_id" wx:for-index="idx">
         <view class="card-img-wrap">
@@ -23,30 +20,37 @@
           <view class="bottom-info">
             <text class="user-name">{{item.userName}}</text>
             <view class="action-right" style="display: flex; align-items: center;">
-              <!-- 删除按钮：管理员或作者可见 -->
               <view class="delete-icon" 
                     catchtap="handleDelete" 
                     data-id="{{item._id}}" 
                     data-index="{{idx}}" 
-                    wx:if="{{isAdmin || item._openid === openid}}">
-                <text>删除</text>
+                    wx:if="{{isAdmin || item._openid === openid}}"
+                    style="display: flex; align-items: center; margin-right: 20rpx;">
+                <image 
+                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMyA2SDVIMjEiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCAzVjRIMTZWM1IiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCA2VjRIMTZWNkgxOVYyMEMxOSAyMS4xMDQ2IDE4LjEwNDYgMjIgMTcgMjJIN0M1Ljg5NTQzIDIyIDUgMjEuMTA0NiA1IDIwVjZIOFoiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTAgMTFWMTciIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTQgMTFWMTciIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=" 
+                  mode="aspectFit"
+                  style="width: 32rpx; height: 32rpx; display: block; flex-shrink: 0;"
+                ></image>
               </view>
-              <!-- 评论图标 -->
-              <view class="comment-icon" bindtap="handleComment" data-id="{{item._id}}" data-index="{{idx}}">
-                <text>💬 {{item.comments.length || 0}}</text>
+              
+              <view class="like-icon" catchtap="handleLike" data-id="{{item._id}}" data-index="{{idx}}" style="display: flex; align-items: center;">
+                <image 
+                  src="{{item.isLiked ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgZmlsbD0iI0ZGMzAzMCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMSA4LjVDMTIuMSA1LjI4IDE0LjcxIDIuNjUgMTcuOSAyLjY1QzIxLjEgMi42NSAyMy43IDUuMjggMjMuNyA4LjVDMjMuNyAxMi41NSAyMC4zIDE1Ljk1IDE0LjggMjAuOTVMMTIuMSAyMy4zNUw5LjM5OTk3IDIwLjk1QzMuODk5OTcgMTUuOTUgMC40OTk5NjkgMTIuNTUgMC40OTk5NjkgOC41QzAuNDk5OTY5IDUuMjggMy4wOTk5NyAyLjY1IDYuMjk5OTcgMi42NUM5LjQ5OTk3IDIuNjUgMTIuMSAzLjUgMTIuMSA4LjVaIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4='}}" 
+                  mode="aspectFit"
+                  style="width: 40rpx; height: 40rpx; display: block; flex-shrink: 0;" 
+                ></image>
+                <text class="like-count" style="margin-left: 8rpx; font-size: 26rpx; line-height: 1; color: {{item.isLiked ? '#FF3030' : '#666'}};">{{item.likes.length || 0}}</text>
               </view>
             </view>
           </view>
         </view>
       </view>
 
-      <!-- 空状态 -->
       <view wx:if="{{posts.length === 0}}" class="empty-state">
         <text>暂无内容，点击右下角发布</text>
       </view>
     </view>
 
-    <!-- 悬浮发布按钮 -->
     <view class="publish-btn" bindtap="handlePublish">
       <text>+</text>
     </view>
@@ -54,7 +58,6 @@
     <view class="footer-spacer"></view>
   </scroll-view>
 
-  <!-- 全局底部导航栏 -->
   <view class="custom-tabbar">
     <view class="tab-item" bindtap="navToHome">看个房间</view>
     <view class="tab-item" bindtap="navToNotes">归家手记</view>
@@ -62,7 +65,6 @@
     <view class="tab-item" bindtap="navToMy">我的</view>
   </view>
 
-  <!-- 帖子详情层 -->
   <view class="post-detail-overlay" wx:if="{{showDetail}}">
     <view style="height: {{navHeight}}px; width: 100%; flex-shrink: 0;"></view>
     <view class="detail-nav-bar">
@@ -85,8 +87,19 @@
       </view>
       <view class="detail-info-section">
         <view class="detail-user-row">
-          <text class="detail-user-name">{{selectedPost.userName}}</text>
-          <text class="detail-time">{{selectedPost.displayTime}}</text>
+          <view class="user-left">
+            <text class="detail-user-name">{{selectedPost.userName}}</text>
+            <text class="detail-time">{{selectedPost.displayTime}}</text>
+          </view>
+          
+          <view class="detail-like-btn" bindtap="handleLike" data-id="{{selectedPost._id}}" data-index="detail" style="display: flex; align-items: center; background: #f5f5f5; padding: 10rpx 24rpx; border-radius: 30rpx;">
+             <image 
+               src="{{selectedPost.isLiked ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgZmlsbD0iI0ZGMzAzMCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMSA4LjVDMTIuMSA1LjI4IDE0LjcxIDIuNjUgMTcuOSAyLjY1QzIxLjEgMi42NSAyMy43IDUuMjggMjMuNyA4LjVDMjMuNyAxMi41NSAyMC4zIDE1Ljk1IDE0LjggMjAuOTVMMTIuMSAyMy4zNUw5LjM5OTk3IDIwLjk1QzMuODk5OTcgMTUuOTUgMC40OTk5NjkgMTIuNTUgMC40OTk5NjkgOC41QzAuNDk5OTY5IDUuMjggMy4wOTk5NyAyLjY1IDYuMjk5OTcgMi42NUM5LjQ5OTk3IDIuNjUgMTIuMSAzLjUgMTIuMSA4LjVaIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4='}}" 
+               mode="aspectFit"
+               style="width: 44rpx; height: 44rpx; display: block; flex-shrink: 0;"
+             ></image>
+             <text style="margin-left: 10rpx; font-weight: 500; font-size: 28rpx; line-height: 1; color: {{selectedPost.isLiked ? '#FF3030' : '#333'}};">{{selectedPost.likes.length || 0}}</text>
+          </view>
         </view>
         <text class="detail-full-content">{{selectedPost.content}}</text>
       </view>
@@ -111,7 +124,6 @@
     </view>
   </view>
 
-  <!-- 发布编辑层：直接跳转至此界面 -->
   <view class="publish-overlay" wx:if="{{showPublishDrawer}}">
     <view style="height: {{navHeight}}px; width: 100%; flex-shrink: 0;"></view>
     <view class="publish-nav-bar">
@@ -123,14 +135,10 @@
       <textarea class="publish-textarea" placeholder="分享此刻的想法..." value="{{publishContent}}" bindinput="onPublishInput" maxlength="1000" focus="{{showPublishDrawer}}"></textarea>
       
       <view class="publish-img-grid">
-        <!-- 预览已选图片 -->
         <view class="pub-img-item" wx:for="{{tempPublishImages}}" wx:key="*this" wx:for-index="imgIdx">
           <image src="{{item}}" mode="aspectFill"></image>
-          <!-- 新增删除照片按钮 -->
           <view class="img-delete-btn" catchtap="onDeleteImage" data-index="{{imgIdx}}">×</view>
         </view>
-        
-        <!-- 内部添加照片按钮：上限9张 -->
         <view class="pub-img-item add-btn" bindtap="onAddImage" wx:if="{{tempPublishImages.length < 9}}">
           <text class="plus-icon">+</text>
           <text class="add-text">添加照片</text>

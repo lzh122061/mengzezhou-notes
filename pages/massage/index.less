@@ -130,18 +130,38 @@ page {
             font-family: "Microsoft YaHei";
           }
           
-          .delete-icon {
-            font-size: 22rpx;
-            color: #999;
-            margin-right: 12rpx;
-            font-family: "Microsoft YaHei";
-            &:active { opacity: 0.6; }
-          }
-          
-          .comment-icon {
-            font-size: 22rpx;
-            color: #999;
-            font-family: "Microsoft YaHei";
+          /* 右侧操作区容器：确保删除按钮和点赞区对齐 */
+          .action-right {
+            display: flex;
+            align-items: center;
+
+            .delete-icon {
+              font-size: 22rpx;
+              color: #999;
+              margin-right: 20rpx;
+              font-family: "Microsoft YaHei";
+              &:active { opacity: 0.6; }
+            }
+            
+            /* 修改部分：小红书风格点赞样式 (Scheme 2) */
+            .like-icon {
+              display: flex;
+              align-items: center; /* 核心：垂直居中 */
+              
+              image {
+                width: 36rpx;
+                height: 36rpx;
+                display: block; /* 消除图片底部间隙 */
+              }
+
+              .like-count {
+                margin-left: 8rpx;
+                font-size: 26rpx;
+                line-height: 1; /* 核心：行高设为1，消除文字上下间距偏差 */
+                color: #666;
+                font-family: "Microsoft YaHei";
+              }
+            }
           }
         }
       }
@@ -214,14 +234,37 @@ page {
       .detail-info-section {
         padding: 30rpx;
         border-bottom: 1rpx solid #eee;
+        
         .detail-user-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 20rpx;
-          .detail-user-name { font-size: 32rpx; font-weight: bold; color: @theme-color; }
-          .detail-time { font-size: 24rpx; color: #999; }
+
+          /* 修改：适配新结构的左侧信息容器 */
+          .user-left {
+            display: flex;
+            flex-direction: column;
+            .detail-user-name { font-size: 32rpx; font-weight: bold; color: @theme-color; }
+            .detail-time { font-size: 24rpx; color: #999; margin-top: 4rpx; }
+          }
+          
+          /* 修改：适配新结构的右侧点赞按钮 */
+          .detail-like-btn {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            padding: 10rpx 24rpx;
+            border-radius: 30rpx;
+            
+            image {
+              width: 40rpx;
+              height: 40rpx;
+              display: block;
+            }
+          }
         }
+        
         .detail-full-content { font-size: 30rpx; line-height: 1.6; color: #333; word-break: break-all; }
       }
       
@@ -433,7 +476,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-top: 1rpx solid #f0f0f0;
+  border-top: 0rpx solid #f0f0f0;
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 1000;
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.02);
@@ -441,7 +484,7 @@ page {
   .tab-item {
     flex: 1;
     text-align: center;
-    font-size: 28rpx;
+    font-size: 32rpx;
     color: #000;
     height: 100%;
     display: flex;

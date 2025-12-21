@@ -1,15 +1,37 @@
+<view class="container">
+
 <view class="detail-container">
-  <view class="nav-back" bindtap="goBack">
+  <view style="height: {{navHeight}}px; width: 100%;"></view>
+
+  <view class="nav-back" bindtap="goBack" style="top: {{statusBarHeight + 6}}px;">
     <text class="back-arrow">❮</text>
   </view>
 
-  <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" circular="true">
-    <block wx:for="{{room.images}}" wx:key="*this">
-      <swiper-item>
-        <image src="{{item}}" mode="aspectFill" class="slide-media" />
-      </swiper-item>
-    </block>
-  </swiper>
+  <view class="swiper-container">
+    <swiper 
+      class="banner-swiper" 
+      indicator-dots="{{false}}" 
+      autoplay="true" 
+      interval="3000" 
+      duration="500" 
+      circular="true"
+      bindchange="onSwiperChange"
+    >
+      <block wx:for="{{room.images}}" wx:key="*this">
+        <swiper-item>
+          <image src="{{item}}" mode="aspectFill" class="slide-media" />
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <view class="indicator-wrapper">
+      <view 
+        wx:for="{{room.images}}" 
+        wx:key="index" 
+        class="dot {{currentSwiper == index ? 'active' : ''}}"
+      ></view>
+    </view>
+  </view>
 
   <view class="main-card">
     <view class="title-row">
@@ -84,4 +106,5 @@
   </view>
   
   <view class="safe-bottom"></view>
+</view>
 </view>

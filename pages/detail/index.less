@@ -38,13 +38,45 @@ page {
 }
 
 .detail-container {
-  .banner-swiper {
+  /* 自定义轮播图容器：用于定位内部的指示器 */
+  .swiper-container {
+    position: relative;
     width: 100%;
-    height: 1200rpx; 
-    .slide-media {
+
+    .banner-swiper {
       width: 100%;
-      height: 100%;
-      display: block;
+      height: 1200rpx; 
+      .slide-media {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+
+    /* 指示器小圆点容器 */
+    .indicator-wrapper {
+      position: absolute;
+      bottom: 100rpx; /* 位于底部主卡片上方 */
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 12rpx;
+      z-index: 5;
+
+      .dot {
+        width: 12rpx;
+        height: 12rpx;
+        border-radius: 6rpx;
+        background: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease; /* 关键：平滑过渡变长动画 */
+      }
+
+      /* 激活态变长样式 */
+      .dot.active {
+        width: 32rpx; 
+        background: #ffffff;
+      }
     }
   }
 
@@ -112,7 +144,6 @@ page {
           border-radius: 4rpx;
           margin-top: 4rpx;
         }
-
       }
     }
   }

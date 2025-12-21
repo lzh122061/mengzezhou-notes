@@ -1,6 +1,5 @@
 const db = wx.cloud.database();
 const CLOUD_BASE = 'cloud://cloud1-7gvskpoo2a3897dc-1392473051';
-
 // --- 1. 本地静态数据 (保留原本的丰富描述) ---
 const ROOM_FACILITIES = ['100M独享WiFi', '独立卫浴', '干湿分离','24h热水', '乳胶床垫', '冷暖空调', '写字桌','单人沙发2个','小茶几', '吹风机', '山泉水入户', '电动车'];
 
@@ -74,10 +73,25 @@ const ROOM_DATABASE = {
 
 Page({
   data: { 
-    room: {} 
+    room: {},
+    navHeight: 0,
+    statusBarHeight: 0
   },
 
   onLoad(options) {
+    // 获取系统信息以适配灵动岛和胶囊按钮
+    const systemInfo = wx.getSystemInfoSync();
+    const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
+    
+    // 计算避开顶部 UI 的高度
+    const statusBarHeight = systemInfo.statusBarHeight;
+    const navHeight = menuButtonInfo.bottom + (menuButtonInfo.top - statusBarHeight);
+
+    this.setData({
+      statusBarHeight: statusBarHeight,
+      navHeight: navHeight
+    });
+
     if (options.id) {
       this.initRoomData(options.id);
     }
@@ -111,7 +125,7 @@ Page({
                 const config = res.data[0];
 
                 // --- 修改逻辑：支持多张图片 ---
-                // 逻辑：优先找 images 数组，如果没找到，找 img 单图并转为数组
+                // 优先找 images 数组，如果没找到，找 img 单图并转为数组
                 
                 if (id === 'kitchen') {
                     // 1. 尝试读取 kitchen_images (假设使用了新字段存数组)
@@ -180,6 +194,12 @@ Page({
       // 如果云端加载失败，直接使用本地数据(含兜底图)
       this.setData({ room: localInfo });
       wx.hideLoading();
+    });
+  },
+// 在 Page 对象中添加小圆点滑动组件
+  onSwiperChange(e) {
+    this.setData({
+      currentSwiper: e.detail.current
     });
   },
 
