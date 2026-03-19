@@ -1,0 +1,49 @@
+<view class="calendar-page">
+  <view class="custom-nav-wrapper" style="height: {{navHeight}}px;">
+    <view class="nav-bar-content" style="padding-top: {{statusBarHeight}}px;">
+      <view class="nav-item" bindtap="navToHome">返回主页</view>
+      <view class="nav-item" bindtap="navToDetail">返回房间</view>
+    </view>
+  </view>
+
+  <view class="matrix-container">
+    <view class="room-column">
+      <view class="corner-cell">房间 / 日期</view>
+      <view class="room-name-cell" wx:for="{{roomList}}" wx:key="*this">
+        {{item}}
+      </view>
+    </view>
+
+    <scroll-view class="data-scroll" scroll-x enable-flex>
+      <view class="matrix-body">
+        <view class="date-header-row">
+          <view class="date-cell {{item.isWeekend ? 'weekend' : ''}} {{item.isToday ? 'today' : ''}}" wx:for="{{timeline}}" wx:key="fullDate">
+            <view class="week">{{item.weekText}}</view>
+            <view class="day">{{item.day}}</view>
+            <view class="month-tag" wx:if="{{item.isFirstDay}}">{{item.month}}月</view>
+          </view>
+        </view>
+
+        <view class="status-row" wx:for="{{roomList}}" wx:for-item="roomCode" wx:key="*this">
+          <view class="status-cell" wx:for="{{timeline}}" wx:for-item="dateItem" wx:key="fullDate">
+            <view class="status-dot {{bookedMatrix[roomCode][dateItem.fullDate] ? 'booked' : 'available'}}"></view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="footer-section">
+    <view class="legend">
+      <view class="legend-item">
+        <view class="box booked"></view><text>已预订</text>
+      </view>
+      <view class="legend-item">
+        <view class="box available"></view><text>空闲</text>
+      </view>
+    </view>
+    <view class="tips">
+      <text>温馨提示：横向滑动查看未来3个月房态，预定请微信联系</text>
+    </view>
+  </view>
+</view>

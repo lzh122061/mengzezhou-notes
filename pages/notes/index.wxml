@@ -4,6 +4,11 @@
   <view class="notice-content">
     <view class="header-title">入住前的一些碎碎念 📝</view>
     
+    <view class="nav-btn" bindtap="openMap">
+      <text>📍</text>
+      <text>导航到店</text>
+    </view>
+
     <view class="section">
       <view class="item-title" style="font-size: 34rpx; border-left: none; padding-left: 0;">🏠 关于房间</view>
       <text class="item-desc">院子共有8间房（1间套房+7间单间），每间约30㎡。</text>
@@ -47,7 +52,7 @@
       <text class="item-desc" style="margin-bottom: 20rpx;">大理属于“大农村”，公共交通不便，建议调整心理预期：</text>
       
       <view class="item-desc">
-        <text style="font-weight: bold; color: #333;">位置：</text> 距古城4.8公里，距洱海廊道2公里。虽然不在古城边，但这里不堵车（旺季优势巨大！），打车直达门口。
+        <text style="font-weight: bold; color: #333;">位置：</text> 距古城4.8公里，距洱海廊道2公里。虽然不在古城边，但这里不堵车，打车直达门口。
       </view>
       <view class="item-desc" style="margin-top: 10rpx;">
         <text style="font-weight: bold; color: #333;">交通福利：</text> 我们免费提供6辆电动车供住客使用！
@@ -64,7 +69,7 @@
       <view class="item-desc"><text style="font-weight: bold; color: #333;">水电网：</text> 全免。</view>
       <view class="item-desc"><text style="font-weight: bold; color: #333;">洗衣：</text> 公用洗衣机1台。</view>
 
-      <view class="item-title" style="font-size: 30rpx; margin-top: 20rpx;">2. 耗材说明（请注意区分）</view>
+      <view class="item-title" style="font-size: 30rpx; margin-top: 20rpx;">2. 一次性用品说明</view>
       <view class="item-desc"><text style="font-weight: bold; color: #333;">🎐 日租/周租的朋友：</text> 提供一次性生活用品（含马桶垫）。</view>
       <view class="item-desc"><text style="font-weight: bold; color: #333;">📅 半月租/月租的朋友：</text> 需自行购买纸巾、洗衣液、牙膏牙刷及饮用水等消耗品。</view>
     </view>
@@ -77,15 +82,17 @@
     </view>
 
     <view class="footer-msg">
-      <text>祝您拥有一段美好的旅程</text>
+      <view style="display: flex; align-items: center; justify-content: center;">
+        <text>祝您拥有一段美好的旅程</text>
+      </view>
       <text>Have a nice trip</text>
     </view>
   </view>
 
   <view class="custom-tabbar">
     <view class="tab-item" bindtap="navToHome">看个房间</view>
-    <view class="tab-item active" bindtap="navToNotes">归家手记</view>
-    <view class="tab-item" bindtap="navToMassage">一起分享</view>
+    <view class="tab-item active" bindtap="navToNotes">碎碎念</view>
+    <view class="tab-item" bindtap="navToMassage">分享</view>
     <view class="tab-item" bindtap="navToMy">我的</view>
   </view>
 </view>

@@ -19,7 +19,7 @@ Page({
     // === 弹窗控制 ===
     showNoticeModal: false,   // "别点我"弹窗
     showContactModal: false,  // "联系人"弹窗
-    showLoginEditModal: false, // 个人信息编辑弹窗 (用于解决无法显示真实名字头像的问题)
+    showLoginEditModal: false, // 个人信息编辑弹窗
 
     // 临时存储用户填写的资料
     tempAvatarUrl: '',
@@ -59,20 +59,19 @@ Page({
   },
 
   onLoad(options) {
-    // 仅加载基础数据，不自动登录
     this.initData();
 
     // 检查缓存中是否已有登录信息
-    const cachedAdmin = wx.getStorageSync('isAdmin');
     const cachedOpenid = wx.getStorageSync('openid');
     const cachedUserInfo = wx.getStorageSync('userInfo');
     
     if (cachedOpenid && cachedUserInfo) {
       this.setData({
         isLogged: true,
-        userInfo: cachedUserInfo,
-        isAdmin: !!cachedAdmin
+        userInfo: cachedUserInfo
       });
+      // 每次进入页面都重新检查一次管理员权限，防止后台加了白名单但前端没刷新
+      this.checkAdminStatus(cachedOpenid);
     }
   },
 
@@ -159,22 +158,34 @@ Page({
   },
 
   /**
-   * 检查管理员权限
+   * 检查管理员权限 (修改为查数据库)
    */
   checkAdminStatus: function(openid) {
-    const admins = [
-      'oDwJG1yI3Poum-CHoryAeqtPETu0' // 您的 OpenID
-    ];
+    if (!openid) return;
 
-    const isAdmin = admins.includes(openid);
-    wx.setStorageSync('isAdmin', isAdmin);
-    this.setData({
-      isAdmin: isAdmin
+    // 查询 admins 集合
+    db.collection('admins').where({
+      openid: openid
+    }).get().then(res => {
+      if (res.data.length > 0) {
+        console.log('管理员身份确认');
+        wx.setStorageSync('isAdmin', true);
+        this.setData({ isAdmin: true });
+      } else {
+        console.log('非管理员用户');
+        wx.setStorageSync('isAdmin', false);
+        this.setData({ isAdmin: false });
+      }
+    }).catch(err => {
+      console.error('验证管理员失败', err);
+      // 兜底策略：如果数据库读失败，保留原来的硬编码以防万一
+      const superAdmins = ['oDwJG1yI3Poum-CHoryAeqtPETu0']; 
+      if(superAdmins.includes(openid)) {
+         this.setData({ isAdmin: true });
+      } else {
+         this.setData({ isAdmin: false });
+      }
     });
-    
-    if (isAdmin) {
-      wx.showToast({ title: '管理员已验证', icon: 'success' });
-    }
   },
 
   // === 跳转到后台管理页面 ===
@@ -209,7 +220,7 @@ Page({
   },
   confirmCall() {
     wx.makePhoneCall({
-      phoneNumber: '17787897998',
+      phoneNumber: '13398720094',
       success: () => { this.setData({ showContactModal: false }); }
     });
   },

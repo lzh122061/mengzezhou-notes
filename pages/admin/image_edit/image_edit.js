@@ -3,10 +3,6 @@ const db = wx.cloud.database();
 Page({
   data: {
     // 定义11个图片位
-    // type: 业务类型 (room/global)
-    // key: 数据库字段名
-    // name: 显示名称
-    // dbId: 查询条件的值 (比如房间号)
     list: [
       { id: 1, name: '小程序首图', type: 'global', key: 'home_banner', currentUrl: '' },
       { id: 2, name: '101 照片', type: 'room', key: 'cover_image', dbId: '101', currentUrl: '' },
@@ -19,24 +15,30 @@ Page({
       { id: 9, name: '108 照片', type: 'room', key: 'cover_image', dbId: '108', currentUrl: '' },
       { id: 10, name: '共享厨房', type: 'global', key: 'kitchen_img', currentUrl: '' },
       { id: 11, name: '休闲公区', type: 'global', key: 'public_area_img', currentUrl: '' }
-    ]
+    ],
+    // ★ 新增：用于双向绑定的今日心情文本
+    todayMood: ''
   },
 
   onLoad() {
     this.loadData();
   },
 
-  // 加载当前图片数据
+  // 加载当前图片数据和心情数据
   async loadData() {
     wx.showLoading({ title: '加载中...' });
     const list = this.data.list;
     
-    // 1. 获取全局配置图片 (首图、厨房、公区)
+    // 1. 获取全局配置图片 (首图、厨房、公区) & 今日心情
     try {
-      // 假设全局配置存在 'config' 集合，且有一条记录
       const configRes = await db.collection('config').limit(1).get(); 
       if (configRes.data.length > 0) {
         const configData = configRes.data[0];
+        
+        // ★ 新增：从数据库读取并赋值今日心情
+        this.setData({
+          todayMood: configData.today_mood || ''
+        });
         
         list.forEach(item => {
           if (item.type === 'global') {
@@ -48,10 +50,8 @@ Page({
       }
 
       // 2. 获取房间图片
-      // 遍历所有房间类型的item，去rooms集合查
       const roomItems = list.filter(item => item.type === 'room');
       
-      // 使用 Promise.all 并发查询
       const roomQueries = roomItems.map(item => {
         return db.collection('rooms').where({
           room_number: item.dbId // 假设数据库房间号字段为 room_number
@@ -80,7 +80,44 @@ Page({
     }
   },
 
-  // 处理上传点击
+  // === ★ 新增：监听输入框内容变化 ===
+  onMoodInput(e) {
+    this.setData({
+      todayMood: e.detail.value
+    });
+  },
+
+  // === ★ 新增：单独保存心情到数据库 ===
+  async saveMood() {
+    if (!this.data.todayMood.trim()) {
+      // 也可以允许为空（用于清空折叠不显示），视你需求而定
+      // 如果允许为空，这行判断可删掉
+    }
+
+    wx.showLoading({ title: '保存心情中...' });
+    try {
+      const res = await db.collection('config').limit(1).get();
+      if (res.data.length > 0) {
+        // 更新已有记录
+        await db.collection('config').doc(res.data[0]._id).update({
+          data: { today_mood: this.data.todayMood }
+        });
+      } else {
+        // 防止数据库为空时报错，做个兜底创建
+        await db.collection('config').add({
+          data: { today_mood: this.data.todayMood }
+        });
+      }
+      wx.hideLoading();
+      wx.showToast({ title: '心情更新成功', icon: 'success' });
+    } catch (err) {
+      console.error('保存心情失败', err);
+      wx.hideLoading();
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    }
+  },
+
+  // 处理上传点击 (维持原样)
   handleUpload(e) {
     const { index } = e.currentTarget.dataset;
     const item = this.data.list[index];
@@ -96,7 +133,7 @@ Page({
     });
   },
 
-  // 上传到云存储
+  // 上传到云存储 (维持原样)
   uploadToCloud(filePath, item, index) {
     wx.showLoading({ title: '上传中...' });
     
@@ -117,12 +154,11 @@ Page({
     });
   },
 
-  // 更新数据库
+  // 更新图片数据库 (维持原样)
   updateDatabase(fileId, item, index) {
     let promise;
 
     if (item.type === 'room') {
-      // 更新房间集合
       promise = db.collection('rooms').where({
         room_number: item.dbId
       }).update({
@@ -131,23 +167,6 @@ Page({
         }
       });
     } else {
-      // 更新全局配置集合
-      // 这里假设只有一条config记录，如果不确定ID，可以先查再更，或者写死ID
-      // 为了演示，这里假设更新第一条
-      promise = db.collection('config').where({
-        // 这里的条件视你数据库而定，如果没有特定ID，可以用一个总的标识
-        // 或者直接用 doc('config_id')
-        // 暂时用 generic update
-        _openid: '{openid}' // 这是一个占位，实际最好用 docId
-      }).limit(1).update({ // update 必须有条件或docId，这里是个演示难点
-         // 建议实际使用： db.collection('config').doc('你的config_doc_id').update(...)
-         // 现在的降级策略：先查到ID再更新
-         data: {
-           [item.key]: fileId
-         }
-      });
-      
-      // 更稳妥的写法：先查 config 的 _id
       promise = db.collection('config').limit(1).get().then(res => {
         if (res.data.length > 0) {
            return db.collection('config').doc(res.data[0]._id).update({
@@ -161,7 +180,6 @@ Page({
       wx.hideLoading();
       wx.showToast({ title: '更新成功' });
       
-      // 更新本地视图
       const key = `list[${index}].currentUrl`;
       this.setData({
         [key]: fileId

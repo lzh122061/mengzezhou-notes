@@ -1,158 +1,246 @@
 page {
-  background-color: #f5f7fa;
+  background-color: #f7f8fa;
+  color: #333;
+  font-size: 28rpx;
+  /* 增加页面高度防止弹动 */
+  min-height: 100vh;
 }
 
 .container {
-  padding: 20rpx;
+  padding-bottom: 60rpx;
 }
 
-/* 登录/无权限提示 */
+/* 1. 顶部返回栏 */
+.back-nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 88rpx;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 32rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03);
+  font-weight: 500;
+  
+  .back-icon {
+    font-size: 32rpx;
+    margin-right: 12rpx;
+    font-weight: bold;
+  }
+}
+
+/* 2. 登录/身份验证区域 (已美化) */
 .login-box {
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 80vh;
-  
-  .tips {
-    margin-top: 40rpx;
-    font-size: 34rpx;
-    color: #333;
-    font-weight: bold;
+  padding-top: 100rpx;
+
+  icon { 
+    margin-bottom: 40rpx; 
+    transform: scale(1.1);
   }
-  
-  .sub-tips {
-    margin-top: 20rpx;
-    font-size: 26rpx;
-    color: #999;
+
+  .tips { 
+    margin-top: 0;
+    font-size: 36rpx; 
+    font-weight: 700; 
+    color: #333;
+    margin-bottom: 60rpx;
+  }
+
+  /* 登录卡片美化 */
+  .login-card {
+    width: 620rpx;
+    background: #fff;
+    padding: 60rpx 40rpx;
+    border-radius: 24rpx;
+    box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.05);
+    box-sizing: border-box;
+    
+    .label {
+      font-size: 26rpx;
+      color: #999;
+      margin-bottom: 24rpx;
+      display: block;
+      padding-left: 4rpx;
+    }
+
+    /* 密码输入框美化 */
+    .login-input {
+      width: 100%;
+      height: 100rpx;
+      background: #f7f8fa;
+      border-radius: 16rpx;
+      padding: 0 32rpx;
+      box-sizing: border-box;
+      font-size: 32rpx;
+      color: #333;
+      margin-bottom: 48rpx;
+      border: 2rpx solid transparent;
+      transition: all 0.2s ease;
+
+      /* 输入框聚焦效果：边框变绿，背景变白 */
+      &:focus {
+        background: #fff;
+        border-color: #07c160;
+        box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.08);
+      }
+    }
+
+    /* 登录按钮美化 */
+    .login-btn {
+      width: 100% !important;
+      height: 100rpx;
+      line-height: 100rpx;
+      background: #07c160;
+      color: #fff;
+      font-size: 32rpx;
+      font-weight: 600;
+      border-radius: 50rpx; /* 胶囊按钮 */
+      padding: 0;
+      margin: 0;
+      box-shadow: 0 8rpx 20rpx rgba(7, 193, 96, 0.2);
+      border: none;
+      
+      &::after { border: none; } /* 去掉原生边框 */
+
+      &:active {
+        transform: scale(0.98);
+        background: #06ad56;
+        box-shadow: 0 4rpx 10rpx rgba(7, 193, 96, 0.15);
+      }
+    }
+  }
+
+  .openid-section {
+    margin-top: 100rpx;
+    text-align: center;
+    width: 80%;
+
+    .sub-tips { 
+      color: #bbb; 
+      font-size: 22rpx; 
+      margin-bottom: 16rpx;
+      display: block;
+    }
+    
+    .code-box {
+       display: inline-block;
+       font-size: 20rpx; 
+       color: #aaa;
+       background: #eeeeee;
+       padding: 10rpx 24rpx;
+       border-radius: 30rpx;
+       word-break: break-all;
+    }
   }
 }
 
-/* 管理后台主体 */
+/* 3. 管理区头部 */
 .admin-content {
-  padding-bottom: 60rpx;
-
+  padding: 24rpx;
+  
   .header {
-    font-size: 40rpx;
+    font-size: 36rpx;
     font-weight: 800;
-    color: #333;
     margin: 20rpx 0 40rpx 10rpx;
   }
 }
 
 .section {
-  margin-bottom: 50rpx;
+  margin-bottom: 40rpx;
   
   .section-title {
-    font-size: 32rpx;
-    font-weight: bold;
-    color: #444;
-    margin-bottom: 20rpx;
-    padding-left: 10rpx;
+    font-size: 30rpx;
+    font-weight: 600;
+    margin-bottom: 24rpx;
+    padding-left: 16rpx;
     border-left: 8rpx solid #07c160;
   }
 }
 
-/* 卡片通用样式 */
+/* 4. 通用卡片样式 */
 .card {
   background: #fff;
   border-radius: 16rpx;
-  padding: 30rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.02);
   
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20rpx;
-    font-size: 30rpx;
+    margin-bottom: 24rpx;
     font-weight: 600;
+    font-size: 30rpx;
     
     .tag {
-      font-size: 22rpx;
+      font-size: 20rpx;
       background: #e6f7ff;
       color: #1890ff;
       padding: 4rpx 12rpx;
-      border-radius: 8rpx;
+      border-radius: 6rpx;
     }
   }
 }
 
-/* 图片上传区域 */
+/* 5. 图片上传区 */
 .image-area {
-  width: 100%;
-  height: 360rpx;
-  background: #f0f2f5;
+  height: 340rpx;
+  background: #fafafa;
   border-radius: 12rpx;
-  overflow: hidden;
-  position: relative;
-  border: 2rpx dashed #d9d9d9;
+  border: 2rpx dashed #eee;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  position: relative;
 
-  .preview-img {
-    width: 100%;
-    height: 100%;
-  }
+  .preview-img { width: 100%; height: 100%; }
 
   .placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #999;
-    
-    text:first-child {
-      font-size: 60rpx;
-      margin-bottom: 10rpx;
-    }
-    text:last-child {
-      font-size: 26rpx;
-    }
+    display: flex; flex-direction: column; align-items: center; color: #ccc;
+    text:first-child { font-size: 56rpx; margin-bottom: 8rpx; }
+    text:last-child { font-size: 24rpx; }
   }
 }
+.img-tips { font-size: 22rpx; color: #bbb; text-align: center; margin-top: 12rpx; }
 
-.img-tips {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 15rpx;
-  text-align: center;
-}
-
-/* 价格管理区域 */
+/* 6. 房价管理卡片 */
 .price-card {
   .room-name {
-    font-size: 34rpx;
-    font-weight: bold;
-    margin-bottom: 30rpx;
-    border-bottom: 1px solid #eee;
+    font-size: 32rpx;
+    font-weight: 700;
     padding-bottom: 20rpx;
+    border-bottom: 1rpx solid #f5f5f5;
+    margin-bottom: 24rpx;
   }
 
-  /* 展示态 */
+  /* 展示态：3列布局 */
   .price-display {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr); 
     gap: 20rpx;
-    margin-bottom: 30rpx;
+    margin-bottom: 24rpx;
     
     .price-item {
-      font-size: 28rpx;
+      font-size: 26rpx;
       color: #333;
-      
-      .label {
-        color: #888;
-        margin-right: 10rpx;
-      }
+      .label { color: #999; margin-right: 4rpx; font-size: 24rpx; }
     }
   }
 
   .edit-btn {
     width: 100%;
-    background: #f0f2f5;
-    color: #333;
+    background: #f7f8fa;
+    color: #666;
     font-weight: normal;
+    font-size: 26rpx;
+    border-radius: 8rpx;
   }
 
   /* 编辑态 */
@@ -162,15 +250,15 @@ page {
     margin-bottom: 20rpx;
     
     text {
-      width: 80rpx;
+      width: 110rpx; 
       font-size: 28rpx;
-      color: #666;
+      color: #555;
     }
     
     input {
       flex: 1;
-      background: #f8f8f8;
-      height: 70rpx;
+      background: #f7f8fa;
+      height: 68rpx;
       padding: 0 20rpx;
       border-radius: 8rpx;
       font-size: 28rpx;
@@ -180,46 +268,153 @@ page {
   .btn-group {
     display: flex;
     justify-content: flex-end;
-    margin-top: 30rpx;
     gap: 20rpx;
+    margin-top: 24rpx;
     
-    button {
-      margin: 0;
+    button { margin: 0; }
+  }
+}
+
+/* 7. 房态管理卡片样式 */
+.calendar-card {
+  padding: 20rpx;
+
+  /* 房间选择器 (横向滚动) */
+  .room-selector {
+    white-space: nowrap;
+    height: 80rpx;
+    margin-bottom: 20rpx;
+    border-bottom: 1rpx solid #f0f0f0;
+
+    .room-tab {
+      display: inline-block;
+      padding: 10rpx 30rpx;
+      margin-right: 16rpx;
+      background: #f7f8fa;
+      color: #666;
+      border-radius: 30rpx;
+      font-size: 26rpx;
+      transition: all 0.2s;
+
+      &.active {
+        background: #07c160;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 4rpx 10rpx rgba(7, 193, 96, 0.3);
+      }
+    }
+  }
+
+  /* 月份控制栏 */
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+    padding: 0 10rpx;
+
+    .ctrl-btn {
+      padding: 10rpx 24rpx;
+      background: #f0f0f0;
+      border-radius: 12rpx;
+      font-size: 24rpx;
+      color: #555;
+      &:active { opacity: 0.7; }
+    }
+    .curr-date {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+
+  /* 星期头 */
+  .week-row {
+    display: flex;
+    margin-bottom: 10rpx;
+    text {
+      flex: 1;
+      text-align: center;
+      font-size: 24rpx;
+      color: #999;
+    }
+  }
+
+  /* 日历网格 */
+  .days-grid {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1rpx solid #eee;
+    border-left: 1rpx solid #eee;
+
+    .day-cell {
+      width: 14.28%; /* 7等分 */
+      height: 90rpx;
+      border-right: 1rpx solid #eee;
+      border-bottom: 1rpx solid #eee;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: background 0.2s;
+
+      .num {
+        font-size: 28rpx;
+        font-weight: 500;
+      }
+      .status-icon {
+        font-size: 22rpx;
+        margin-top: 4rpx;
+      }
+
+      /* 空白日期 */
+      &.empty {
+        background: #fcfcfc;
+      }
+
+      /* 已锁房状态 */
+      &.booked {
+        background: #fff1f0;
+        .num { color: #ff4d4f; }
+      }
+      
+      &:active {
+        background: #e6f7ff;
+      }
+    }
+  }
+
+  /* 图例 */
+  .calendar-legend {
+    display: flex;
+    justify-content: center;
+    gap: 40rpx;
+    margin-top: 30rpx;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 24rpx;
+      color: #666;
+
+      .dot {
+        width: 16rpx;
+        height: 16rpx;
+        border-radius: 50%;
+        margin-right: 10rpx;
+        
+        &.booked { background: #ff4d4f; }
+        &.available { background: #eee; border: 1rpx solid #ccc; }
+      }
     }
   }
 }
 
 .footer-tips {
   text-align: center;
-  color: #ccc;
-  font-size: 24rpx;
+  color: #ddd;
+  font-size: 22rpx;
   margin-top: 40rpx;
-}
-
-/* 新增：返回按钮样式 */
-.back-nav-bar {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-  padding-left: 30rpx;
-  background-color: #ffffff;
-  z-index: 1000;
-  font-size: 30rpx;
-  color: #333333;
-  border-bottom: 1rpx solid #eeeeee;
-  
-  .back-icon {
-    font-weight: bold;
-    margin-right: 10rpx;
-    font-size: 34rpx;
-  }
-}
-
-/* 调整原有容器，确保不被置顶的返回栏遮挡 */
-.admin-content {
-  padding-top: 20rpx;
 }

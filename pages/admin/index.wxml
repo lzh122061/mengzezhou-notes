@@ -1,84 +1,195 @@
 <view class="container">
- <view class="back-nav-bar" bindtap="goBackToIndex">
+  
+  <view class="back-nav-bar" bindtap="goBackToHome">
     <text class="back-icon">〈</text>
     <text>返回首页</text>
- </view>
+  </view>
 
-<view wx:if="{{!isAdmin}}" class="login-box">
-  <icon type="info" size="60" color="#888"/>
-  <text class="tips">正在核验管理员身份...</text>
-  <text class="sub-tips">如果您是管理员，页面将自动刷新</text>
-</view>
-
-<view wx:else class="admin-content">
-  <view class="header">后台管理系统</view>
-
-  <view class="section">
-    <view class="section-title">1. 图片配置 (点击更换)</view>
+  <view wx:if="{{!isAdmin}}" class="login-box">
+    <icon type="info" size="60" color="#888"/>
+    <text class="tips">管理员身份验证</text>
     
-    <block wx:for="{{imageList}}" wx:key="id">
-      <view class="card">
-        <view class="card-header">
-          <text>{{item.name}}</text>
-          <text class="tag">{{item.type === 'global' ? '全局' : '房间'}}</text>
-        </view>
-        
-        <view class="image-area" bindtap="handleUploadImage" data-index="{{index}}">
-          <image wx:if="{{item.currentUrl}}" src="{{item.currentUrl}}" mode="aspectFill" class="preview-img" />
-          <view wx:else class="placeholder">
-            <text>+</text>
-            <text>点击上传</text>
-          </view>
-        </view>
-        <view class="img-tips">建议尺寸: 16:9 或 4:3</view>
-      </view>
-    </block>
+    <view class="login-card">
+      <view class="label">请输入管理员密码:</view>
+      <input 
+        type="password" 
+        class="login-input"
+        placeholder="默认为 123456" 
+        bindinput="handlePasswordInput" 
+      />
+      <button class="login-btn" bindtap="verifyPassword">登录后台</button>
+    </view>
+
+    <view class="openid-section">
+      <text class="sub-tips">如需白名单免密登录，请复制下方ID给开发者:</text>
+      <view class="code-box" bindtap="copyOpenId">{{currentOpenId || '正在获取OpenID...'}} (点击复制)</view>
+    </view>
   </view>
 
-  <view class="section">
-    <view class="section-title">2. 房价管理</view>
+  <view wx:else class="admin-content">
+    <view class="header">后台管理系统</view>
 
-    <block wx:for="{{roomList}}" wx:key="_id">
-      <view class="card price-card">
-        <view class="room-name">{{item.name}}</view>
-
-        <block wx:if="{{editingId === item._id}}">
-          <view class="input-row">
-            <text>日租:</text>
-            <input type="number" value="{{tempPrices.day}}" data-field="day" bindinput="handleInput" placeholder="0"/>
-          </view>
-          <view class="input-row">
-            <text>周租:</text>
-            <input type="number" value="{{tempPrices.week}}" data-field="week" bindinput="handleInput" placeholder="0"/>
-          </view>
-          <view class="input-row">
-            <text>半月:</text>
-            <input type="number" value="{{tempPrices.half}}" data-field="half" bindinput="handleInput" placeholder="0"/>
-          </view>
-          <view class="input-row">
-            <text>月租:</text>
-            <input type="number" value="{{tempPrices.month}}" data-field="month" bindinput="handleInput" placeholder="0"/>
-          </view>
-          <view class="btn-group">
-            <button size="mini" type="default" bindtap="cancelEdit">取消</button>
-            <button size="mini" type="primary" bindtap="savePrice" data-dbid="{{item._id}}">保存</button>
-          </view>
-        </block>
-
-        <block wx:else>
-          <view class="price-display">
-            <view class="price-item"><text class="label">日:</text> ¥{{item.price_day}}</view>
-            <view class="price-item"><text class="label">周:</text> ¥{{item.price_week}}</view>
-            <view class="price-item"><text class="label">半月:</text> ¥{{item.price_half_month}}</view>
-            <view class="price-item"><text class="label">月:</text> ¥{{item.price_month}}</view>
-          </view>
-          <button class="edit-btn" size="mini" bindtap="editPrice" data-item="{{item}}">修改价格</button>
-        </block>
-
+    <!-- ==================== ★ 新增：今日心情编辑模块 (融入原有卡片UI) ==================== -->
+    <view class="card">
+      <view class="card-header" style="margin-bottom: 16rpx;">
+        <text>✍️ 今日主理人心情</text>
+        <text style="font-size: 22rpx; font-weight: normal; color: #999;">留空则前台自动隐藏</text>
       </view>
-    </block>
-  </view>
+      
+      <textarea 
+        value="{{todayMood}}" 
+        bindinput="onMoodInput"
+        placeholder="请输入今天的心情..." 
+        maxlength="100"
+        style="width: 100%; height: 160rpx; background: #f7f8fa; border-radius: 8rpx; padding: 20rpx; box-sizing: border-box; font-size: 28rpx; color: #333;"
+      ></textarea>
 
-  <view class="footer-tips">--- 到底了 ---</view>
-</view>
+      <button 
+        bindtap="saveMood" 
+        style="margin-top: 24rpx; background: #07c160; color: #fff; font-size: 28rpx; border-radius: 40rpx; width: 100%; height: 80rpx; line-height: 80rpx; padding: 0;"
+      >
+        更新前台展示
+      </button>
+    </view>
+    <!-- =================================================================================== -->
+
+    <view class="section">
+      <view class="section-title" bindtap="toggleSection" data-key="images">
+        <text>1. 图片配置 (点击更换)</text>
+        <text class="arrow">{{sectionExpanded.images ? '▲' : '▼'}}</text>
+      </view>
+      
+      <view wx:if="{{sectionExpanded.images}}">
+        <block wx:for="{{imageList}}" wx:key="id">
+          <view class="card">
+            <view class="card-header">
+              <text>{{item.name}}</text>
+              <text class="tag">{{item.type === 'global' ? '全局' : '房间'}}</text>
+            </view>
+            
+            <view class="image-area" bindtap="handleUploadImage" data-index="{{index}}">
+              <image wx:if="{{item.currentUrl}}" src="{{item.currentUrl}}" mode="aspectFill" class="preview-img" />
+              <view wx:else class="placeholder">
+                <text class="plus">+</text>
+                <text>点击上传</text>
+              </view>
+            </view>
+            <view class="img-tips">建议尺寸: 16:9 (横图) 或 4:3</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title" bindtap="toggleSection" data-key="prices">
+        <text>2. 房价管理</text>
+        <text class="arrow">{{sectionExpanded.prices ? '▲' : '▼'}}</text>
+      </view>
+
+      <view wx:if="{{sectionExpanded.prices}}">
+        <block wx:for="{{roomList}}" wx:key="_id">
+          <view class="card price-card">
+            <view class="room-name">{{item.name}}</view>
+
+            <block wx:if="{{editingId === item._id}}">
+              <view class="input-row">
+                <text>日租:</text>
+                <input type="number" value="{{tempPrices.day}}" data-field="day" bindinput="handlePriceInput" placeholder="0"/>
+              </view>
+              <view class="input-row">
+                <text>节假日:</text>
+                <input type="number" value="{{tempPrices.holiday}}" data-field="holiday" bindinput="handlePriceInput" placeholder="0"/>
+              </view>
+              <view class="input-row">
+                <text>周租:</text>
+                <input type="number" value="{{tempPrices.week}}" data-field="week" bindinput="handlePriceInput" placeholder="0"/>
+              </view>
+              <view class="input-row">
+                <text>半月:</text>
+                <input type="number" value="{{tempPrices.half}}" data-field="half" bindinput="handlePriceInput" placeholder="0"/>
+              </view>
+              <view class="input-row">
+                <text>月租:</text>
+                <input type="number" value="{{tempPrices.month}}" data-field="month" bindinput="handlePriceInput" placeholder="0"/>
+              </view>
+              <view class="btn-group">
+                <button size="mini" type="default" bindtap="cancelEdit">取消</button>
+                <button size="mini" type="primary" bindtap="savePrice" data-dbid="{{item._id}}">保存</button>
+              </view>
+            </block>
+
+            <block wx:else>
+              <view class="price-display">
+                <view class="price-item"><text class="label">日:</text> ¥{{item.price_day}}</view>
+                <view class="price-item"><text class="label">节假日:</text> ¥{{item.price_holiday || '-'}}</view>
+                <view class="price-item"><text class="label">周:</text> ¥{{item.price_week}}</view>
+                <view class="price-item"><text class="label">半月:</text> ¥{{item.price_half_month}}</view>
+                <view class="price-item"><text class="label">月:</text> ¥{{item.price_month}}</view>
+              </view>
+              <button class="edit-btn" size="mini" bindtap="editPrice" data-item="{{item}}">修改价格</button>
+            </block>
+
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title" bindtap="toggleSection" data-key="calendar">
+        <text>3. 房态管理 (支持滑动批量操作/单击切换)</text>
+        <text class="arrow">{{sectionExpanded.calendar ? '▲' : '▼'}}</text>
+      </view>
+      
+      <view wx:if="{{sectionExpanded.calendar}}">
+        <view class="card calendar-card">
+          <scroll-view class="room-selector" scroll-x enable-flex>
+            <view 
+              wx:for="{{roomIds}}" 
+              wx:key="*this"
+              bindtap="switchAdminRoom"
+              data-id="{{item}}"
+              class="room-tab {{currentAdminRoom === item ? 'active' : ''}}"
+            >
+              {{item}}
+            </view>
+          </scroll-view>
+
+          <view class="calendar-header">
+            <view class="ctrl-btn" bindtap="prevMonth">❮ 上月</view>
+            <view class="curr-date">{{monthText}}</view>
+            <view class="ctrl-btn" bindtap="nextMonth">下月 ❯</view>
+          </view>
+
+          <view class="week-row">
+            <text wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this">{{item}}</text>
+          </view>
+
+          <view 
+            class="days-grid"
+            bindtouchstart="handleGridTouchStart"
+            bindtouchmove="handleGridTouchMove"
+            bindtouchend="handleGridTouchEnd"
+          >
+            <view 
+              wx:for="{{adminCalendarDays}}" 
+              wx:key="fullDate"
+              class="day-cell {{item.isBooked ? 'booked' : ''}}"
+              bindtap="toggleDayStatus" 
+              data-index="{{index}}"
+            >
+              <text class="num" wx:if="{{item.day}}">{{item.day}}</text>
+              <text class="status-icon" wx:if="{{item.isBooked}}">🔒</text>
+            </view>
+          </view>
+
+          <view class="calendar-legend">
+            <view class="legend-item"><view class="dot booked"></view> 已锁房</view>
+            <view class="legend-item"><view class="dot available"></view> 空闲</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="footer-tips">--- 到底了 ---</view>
+  </view>
 </view>

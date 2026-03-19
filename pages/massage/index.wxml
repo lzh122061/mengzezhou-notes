@@ -1,15 +1,35 @@
 <view class="container">
   <view style="height: {{navHeight}}px"></view>
 
-  <scroll-view scroll-y class="main-content">
-    <view class="tabs-nav">
-      <view wx:for="{{tabs}}" wx:key="index" class="tab-item-top {{activeTab == index ? 'active' : ''}}" bindtap="switchTab" data-index="{{index}}">{{item}}</view>
+  <view class="top-tabs">
+    <view class="tab-item-top {{currentTab === 'surrounding' ? 'active' : ''}}" bindtap="switchTab" data-tab="surrounding">
+      周边游玩
+      <view class="tab-line" wx:if="{{currentTab === 'surrounding'}}"></view>
     </view>
+    <view class="tab-item-top {{currentTab === 'food' ? 'active' : ''}}" bindtap="switchTab" data-tab="food">
+      周边美食
+      <view class="tab-line" wx:if="{{currentTab === 'food'}}"></view>
+    </view>
+    <view class="tab-item-top {{currentTab === 'daily' ? 'active' : ''}}" bindtap="switchTab" data-tab="daily">
+      孟沢洲日常
+      <view class="tab-line" wx:if="{{currentTab === 'daily'}}"></view>
+    </view>
+  </view>
 
+  <scroll-view scroll-y class="main-content">
     <view class="post-list">
       <view class="post-card" wx:for="{{posts}}" wx:key="_id" wx:for-index="idx">
         <view class="card-img-wrap">
-          <image class="cover-img" src="{{item.images[0] || item.image}}" mode="aspectFill" catchtap="showPostDetail" data-post="{{item}}" data-index="{{idx}}"></image>
+          <image 
+            class="cover-img" 
+            src="{{item.images[0] || item.image}}" 
+            mode="aspectFill" 
+            style="width: 100%; height: 100%;" 
+            catchtap="showPostDetail" 
+            data-post="{{item}}" 
+            data-index="{{idx}}"
+            lazy-load="true"
+          ></image>
           <view class="img-count" wx:if="{{item.images && item.images.length > 1}}">
             <text>1/{{item.images.length}}</text>
           </view>
@@ -27,7 +47,7 @@
                     wx:if="{{isAdmin || item._openid === openid}}"
                     style="display: flex; align-items: center; margin-right: 20rpx;">
                 <image 
-                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMyA2SDVIMjEiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCAzVjRIMTZWM1IiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCA2VjRIMTZWNkgxOVYyMEMxOSAyMS4xMDQ2IDE4LjEwNDYgMjIgMTcgMjJIN0M1Ljg5NTQzIDIyIDUgMjEuMTA0NiA1IDIwVjZIOFoiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTAgMTFWMTciIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTQgMTFWMTciIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=" 
+                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMyA2SDVIMjEiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCA2VjRIMTZWM3oiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCA2VjRIMTZWNkgxOVYyMEMxOSAyMS4xMDQ2IDE4LjEwNDYgMjIgMTcgMjJIN0M1Ljg5NTQzIDIyIDUgMjEuMTA0NiA1IDIwVjZIOFoiIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTAgMTFWMTciIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTQgMTFWMTciIHN0cm9rZT0iIzk5OTk5OSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=" 
                   mode="aspectFit"
                   style="width: 32rpx; height: 32rpx; display: block; flex-shrink: 0;"
                 ></image>
@@ -35,7 +55,7 @@
               
               <view class="like-icon" catchtap="handleLike" data-id="{{item._id}}" data-index="{{idx}}" style="display: flex; align-items: center;">
                 <image 
-                  src="{{item.isLiked ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgZmlsbD0iI0ZGMzAzMCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMSA4LjVDMTIuMSA1LjI4IDE0LjcxIDIuNjUgMTcuOSAyLjY1QzIxLjEgMi42NSAyMy43IDUuMjggMjMuNyA4LjVDMjMuNyAxMi41NSAyMC4zIDE1Ljk1IDE0LjggMjAuOTVMMTIuMSAyMy4zNUw5LjM5OTk3IDIwLjk1QzMuODk5OTcgMTUuOTUgMC40OTk5NjkgMTIuNTUgMC40OTk5NjkgOC41QzAuNDk5OTY5IDUuMjggMy4wOTk5NyAyLjY1IDYuMjk5OTcgMi42NUM5LjQ5OTk3IDIuNjUgMTIuMSAzLjUgMTIuMSA4LjVaIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4='}}" 
+                  src="{{item.isLiked ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgZmlsbD0iI0ZGMzAzMCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+'}}" 
                   mode="aspectFit"
                   style="width: 40rpx; height: 40rpx; display: block; flex-shrink: 0;" 
                 ></image>
@@ -51,7 +71,7 @@
       </view>
     </view>
 
-    <view class="publish-btn" bindtap="handlePublish">
+    <view class="publish-btn" bindtap="handlePublish" wx:if="{{isAdmin}}">
       <text>+</text>
     </view>
 
@@ -60,12 +80,12 @@
 
   <view class="custom-tabbar">
     <view class="tab-item" bindtap="navToHome">看个房间</view>
-    <view class="tab-item" bindtap="navToNotes">归家手记</view>
-    <view class="tab-item active">一起分享</view>
+    <view class="tab-item" bindtap="navToNotes">碎碎念</view>
+    <view class="tab-item active">分享</view>
     <view class="tab-item" bindtap="navToMy">我的</view>
   </view>
 
-  <view class="post-detail-overlay" wx:if="{{showDetail}}">
+  <view class="post-detail-overlay" wx:if="{{showDetail}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
     <view style="height: {{navHeight}}px; width: 100%; flex-shrink: 0;"></view>
     <view class="detail-nav-bar">
       <view class="detail-back-btn" bindtap="closePostDetail">
@@ -77,11 +97,29 @@
         <swiper class="detail-swiper" indicator-dots="{{selectedPost.images.length > 1}}" indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#3D553D" circular style="height: 750rpx;">
           <block wx:for="{{selectedPost.images}}" wx:key="*this">
             <swiper-item>
-              <image class="detail-full-img" src="{{item}}" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+              <image 
+                class="detail-full-img" 
+                src="{{item}}" 
+                mode="aspectFill" 
+                style="width: 100%; height: 100%;"
+                catchtap="onPreviewImage"
+                data-current="{{item}}"
+                data-urls="{{selectedPost.images}}"
+                lazy-load="true"
+              ></image>
             </swiper-item>
           </block>
           <swiper-item wx:if="{{!selectedPost.images || selectedPost.images.length === 0}}">
-            <image class="detail-full-img" src="{{selectedPost.image}}" mode="aspectFill" style="width: 100%; height: 100%;"></image>
+            <image 
+              class="detail-full-img" 
+              src="{{selectedPost.image}}" 
+              mode="aspectFill" 
+              style="width: 100%; height: 100%;"
+              catchtap="onPreviewImage"
+              data-current="{{selectedPost.image}}"
+              data-urls="{{[selectedPost.image]}}"
+              lazy-load="true"
+            ></image>
           </swiper-item>
         </swiper>
       </view>
@@ -93,12 +131,12 @@
           </view>
           
           <view class="detail-like-btn" bindtap="handleLike" data-id="{{selectedPost._id}}" data-index="detail" style="display: flex; align-items: center; background: #f5f5f5; padding: 10rpx 24rpx; border-radius: 30rpx;">
-             <image 
-               src="{{selectedPost.isLiked ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgZmlsbD0iI0ZGMzAzMCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMSA4LjVDMTIuMSA1LjI4IDE0LjcxIDIuNjUgMTcuOSAyLjY1QzIxLjEgMi42NSAyMy43IDUuMjggMjMuNyA4LjVDMjMuNyAxMi41NSAyMC4zIDE1Ljk1IDE0LjggMjAuOTVMMTIuMSAyMy4zNUw5LjM5OTk3IDIwLjk1QzMuODk5OTcgMTUuOTUgMC40OTk5NjkgMTIuNTUgMC40OTk5NjkgOC41QzAuNDk5OTY5IDUuMjggMy4wOTk5NyAyLjY1IDYuMjk5OTcgMi42NUM5LjQ5OTk3IDIuNjUgMTIuMSAzLjUgMTIuMSA4LjVaIiBzdHJva2U9IiMzMzMzMzMiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4='}}" 
-               mode="aspectFit"
-               style="width: 44rpx; height: 44rpx; display: block; flex-shrink: 0;"
-             ></image>
-             <text style="margin-left: 10rpx; font-weight: 500; font-size: 28rpx; line-height: 1; color: {{selectedPost.isLiked ? '#FF3030' : '#333'}};">{{selectedPost.likes.length || 0}}</text>
+              <image 
+                src="{{selectedPost.isLiked ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgZmlsbD0iI0ZGMzAzMCIvPjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMjEuMzVMMTAuNTUgMjAuMDNDNS40IDE1LjM2IDIgMTIuMjggMiA4LjVDMiA1LjQyIDQuNDIgMyA3LjUgM0M5LjI0IDMgMTAuOTEgMy44MSAxMiA1LjA5QzEzLjA5IDMuODEgMTQuNzYgMyAxNi41IDNDMTkuNTggMyAyMiA1LjQyIDIyIDguNUMyMiAxMi4yOCAxOC42IDE1LjM2IDEzLjQ1IDIwLjAzTDEyIDIxLjM1WiIgc3Ryb2tlPSIjMzMzMzMzIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+'}}" 
+                mode="aspectFit"
+                style="width: 44rpx; height: 44rpx; display: block; flex-shrink: 0;"
+              ></image>
+              <text style="margin-left: 10rpx; font-weight: 500; font-size: 28rpx; line-height: 1; color: {{selectedPost.isLiked ? '#FF3030' : '#333'}};">{{selectedPost.likes.length || 0}}</text>
           </view>
         </view>
         <text class="detail-full-content">{{selectedPost.content}}</text>
@@ -136,7 +174,7 @@
       
       <view class="publish-img-grid">
         <view class="pub-img-item" wx:for="{{tempPublishImages}}" wx:key="*this" wx:for-index="imgIdx">
-          <image src="{{item}}" mode="aspectFill"></image>
+          <image src="{{item}}" mode="aspectFill" style="width: 100%; height: 100%;" lazy-load="true"></image>
           <view class="img-delete-btn" catchtap="onDeleteImage" data-index="{{imgIdx}}">×</view>
         </view>
         <view class="pub-img-item add-btn" bindtap="onAddImage" wx:if="{{tempPublishImages.length < 9}}">

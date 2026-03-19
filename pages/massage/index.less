@@ -17,37 +17,43 @@ page {
     overflow: hidden;
   }
 
-  /* 顶部导航：保持系统字体 */
-  .tabs-nav {
+  /* 顶部选项卡：修改为横排并列 */
+  .top-tabs {
     display: flex;
+    justify-content: center;
+    align-items: center;
     background: #fff;
-    padding: 20rpx 0;
-    margin-bottom: 10rpx;
+    height: 88rpx;
+    position: relative;
+    z-index: 10;
+    border-bottom: 1rpx solid #f0f0f0;
     box-shadow: 0 4rpx 10rpx rgba(89, 107, 73, 0.05);
-    
+
     .tab-item-top {
-      flex: 1;
-      text-align: center;
-      font-size: 28rpx;
-      color: #7a8b7a;
+      flex: 1; /* 平分宽度 */
       position: relative;
-      padding-bottom: 10rpx;
-      
+      font-size: 30rpx;
+      color: #7a8b7a;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+
       &.active {
         color: @theme-color;
         font-weight: bold;
-        
-        &:after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 40rpx;
-          height: 4rpx;
-          background-color: @theme-color;
-          border-radius: 2rpx;
-        }
+      }
+
+      .tab-line {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40rpx;
+        height: 6rpx;
+        background: @theme-color;
+        border-radius: 3rpx;
       }
     }
   }

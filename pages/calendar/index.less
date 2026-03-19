@@ -1,0 +1,225 @@
+@theme-color: #3D553D;
+@bg-color: #F2EDD0;   // 全局统一背景色
+@border-color: #dcd6b0;
+@cell-bg: #fdfcf0;    // 格子内部颜色
+@booked-color: #d84e43;
+@available-color: #e0e0e0;
+
+page {
+  background-color: @bg-color;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.calendar-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: flex-start; 
+
+  .custom-nav-wrapper {
+    width: 100%;
+    background: @bg-color;
+    z-index: 100;
+    padding-top: 10rpx; 
+    box-shadow: none;
+    flex-shrink: 0;
+
+    .nav-bar-content {
+      height: 450rpx; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 30rpx;
+
+      .nav-item {
+        flex: 1;
+        max-width: 220rpx;
+        font-size: 28rpx;
+        color: @theme-color;
+        font-weight: bold;
+        text-align: center;
+        border: 2rpx solid @theme-color;
+        margin: 0 16rpx;
+        padding: 12rpx 0;
+        border-radius: 40rpx;
+        background: transparent;
+        transition: all 0.2s;
+
+        &:active {
+          background: @theme-color;
+          color: #fff;
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  .matrix-container {
+    margin-top: auto; 
+    margin-bottom: 0; 
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+
+    display: flex;
+    overflow: hidden;
+
+    border: none; 
+    border-radius: 16rpx;
+    background: transparent;
+
+    /* 固定左侧列 */
+    .room-column {
+      width: 150rpx;
+      flex-shrink: 0;
+      background: transparent;
+      border-right: none; 
+      z-index: 10;
+      
+      .corner-cell, .room-name-cell {
+        height: 70rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24rpx;
+        border-bottom: 1rpx solid @border-color;
+        border-right: 1rpx solid @border-color;
+        
+        /* 修改点1：补上左边框，让左侧闭合 */
+        border-left: 1rpx solid @border-color;
+      }
+
+      .room-name-cell {
+        font-weight: bold;
+        color: @theme-color;
+        background: @cell-bg;
+      }
+
+      .corner-cell {
+        font-size: 20rpx;
+        color: #888;
+        background: transparent;
+        border-top-left-radius: 16rpx;
+        
+        /* 修改点2：给“房间/日期”格子单独补上上边框，实现四面包裹 */
+        border-top: 1rpx solid @border-color;
+      }
+    }
+
+    /* 右侧滚动区 */
+    .data-scroll {
+      flex: 1;
+      white-space: nowrap;
+      background: transparent;
+      border-top-right-radius: 16rpx;
+      
+      .matrix-body {
+        display: inline-block;
+      }
+
+      .date-header-row, .status-row {
+        display: flex;
+      }
+
+      .date-cell, .status-cell {
+        width: 100rpx;
+        height: 70rpx;
+        flex-shrink: 0;
+        border-right: 1rpx solid @border-color;
+        border-bottom: 1rpx solid @border-color;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .date-cell {
+        background: @cell-bg;
+        
+        /* 修改点3：给第一排日期格子补上上边框，让顶部闭合 */
+        border-top: 1rpx solid @border-color;
+
+        .week { font-size: 18rpx; color: #999; margin-bottom: 0; }
+        .day { font-size: 26rpx; font-weight: bold; color: #333; }
+
+        &.weekend { background: darken(@cell-bg, 3%); }
+
+        &.today {
+          background: rgba(61, 85, 61, 0.1);
+          .day { color: @theme-color; }
+        }
+
+        .month-tag {
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: @theme-color;
+          color: #fff;
+          font-size: 14rpx;
+          padding: 2rpx 6rpx;
+          border-bottom-right-radius: 8rpx;
+          /* 微调：防止标签盖住边框 */
+          top: -1rpx; 
+          left: -1rpx;
+        }
+      }
+
+      .status-cell {
+        background: @cell-bg;
+
+        .status-dot {
+          width: 30rpx;
+          height: 30rpx;
+          border-radius: 50%;
+          transition: transform 0.2s;
+
+          &.booked {
+            background: @booked-color;
+            box-shadow: 0 0 6rpx rgba(216, 78, 67, 0.3);
+          }
+          &.available {
+            background: #ccc;
+          }
+        }
+      }
+    }
+  }
+
+  .footer-section {
+    background: transparent;
+    padding: 20rpx 30rpx;
+    margin-top: 0;
+    margin-bottom: auto;
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 50rpx;
+      margin-bottom: 16rpx;
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 28rpx; 
+        color: #444; 
+        font-weight: bold;
+
+        .box {
+          width: 24rpx; 
+          height: 24rpx;
+          border-radius: 50%;
+          margin-right: 12rpx;
+          &.booked { background: @booked-color; }
+          &.available { background: #ccc; }
+        }
+      }
+    }
+
+    .tips {
+      font-size: 24rpx; 
+      color: #666;
+      text-align: center;
+    }
+  }
+}

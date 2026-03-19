@@ -9,8 +9,7 @@ page {
   background-color: #F2EDD0; /* 米色背景 */
   padding: 30rpx;
   
-  /* [修改] 增加底部内边距，防止内容被底部导航栏遮挡 */
-  /* 100rpx(导航栏高度) + 40rpx(间距) + 安全距离 */
+  /* 增加底部内边距，防止内容被底部导航栏遮挡 */
   padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
   
   box-sizing: border-box; 
@@ -20,7 +19,7 @@ page {
   background-color: #fff;
   border-radius: 24rpx;
   padding: 60rpx 40rpx;
-  /* 柔和的橄榄绿阴影，增加层次感 */
+  /* 柔和的橄榄绿阴影 */
   box-shadow: 0 8rpx 24rpx rgba(89, 107, 73, 0.1); 
 
   .header-title {
@@ -28,7 +27,7 @@ page {
     font-weight: 900;
     text-align: center;
     color: @theme-color;
-    margin-bottom: 70rpx;
+    margin-bottom: 30rpx; /* 修改：减小与下方按钮的间距 */
     letter-spacing: 4rpx;
     position: relative;
 
@@ -44,6 +43,37 @@ page {
     }
   }
 
+  /* === 新增：导航按钮靠右对齐样式 === */
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 核心布局：靠右对齐 */
+    width: fit-content;  /* 宽度随内容自适应 */
+    margin-left: auto;   /* 左侧自动填充，将其推到右边 */
+    margin-right: 0;
+    margin-bottom: 50rpx; /* 与下方“关于房间”保持间距 */
+
+    /* 外观样式 */
+    background: rgba(0,0,0,0.05);
+    padding: 8rpx 20rpx;
+    border-radius: 30rpx;
+
+    text {
+      font-size: 22rpx;
+      color: #333;
+      font-weight: bold;
+      
+      /* 图标样式 */
+      &:first-child {
+        font-size: 24rpx;
+        margin-right: 6rpx;
+        font-weight: normal;
+      }
+    }
+  }
+
   .section {
     margin-bottom: 50rpx;
 
@@ -53,44 +83,57 @@ page {
       color: #2c3e2c; /* 深橄榄绿文字 */
       margin-bottom: 16rpx;
       padding-left: 20rpx;
-      /* 左侧装饰竖线，与首页风格统一 */
+      /* 左侧装饰竖线 */
       border-left: 8rpx solid @theme-color; 
     }
 
     .item-desc {
       font-size: 28rpx;
-      color: #555; /* 正文深灰，易于阅读 */
+      color: #555; /* 正文深灰 */
       line-height: 1.7;
-      text-align: justify; /* 两端对齐，排版更整齐 */
+      text-align: justify; /* 两端对齐 */
       display: block;
     }
   }
 
+  /* 页脚文字样式 */
   .footer-msg {
     margin-top: 100rpx;
-    text-align: center;
+    
+    /* 允许换行 */
     display: flex;
-    flex-direction: column;
+    flex-flow: row wrap; 
+    justify-content: center; /* 水平居中 */
+    align-items: center;     
     
     text {
       font-size: 26rpx;
-      color: #7a8b7a; /* 浅灰绿，保持低调 */
+      color: #7a8b7a; /* 浅灰绿 */
       line-height: 1.6;
       font-weight: 500;
       letter-spacing: 2rpx;
+      margin: 0 10rpx;
     }
     
-    /* 英文部分稍微小一点 */
+    /* 英文部分 (HAVE A NICE TRIP) */
     text:last-child {
+      /* 强制占满一行，从而挤到下一行去 */
+      width: 100%; 
+      display: block;
+      
       font-size: 22rpx;
-      margin-top: 8rpx;
+      margin-top: 12rpx; 
+      margin-left: 0;
+      margin-right: 0;
+      
+      text-align: center;
       text-transform: uppercase;
       opacity: 0.8;
     }
   }
 }
 
-/* === 修改：底部导航栏适配新的 WXML 结构 (.custom-tabbar) === */
+/* 底部自定义导航栏 */
 .custom-tabbar {
   position: fixed;
   bottom: 0;

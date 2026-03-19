@@ -21,6 +21,14 @@
   </view>
 
   <view class="menu-list">
+    <view class="menu-item" bindtap="goToAdminPage">
+      <view class="item-left">
+        <text class="icon">🔧</text>
+        <text class="text">9¾站台</text>
+      </view>
+      <text class="arrow">></text>
+    </view>
+
     <view class="menu-item" bindtap="showNotice">
       <view class="item-left">
         <text class="icon">📝</text>
@@ -39,13 +47,12 @@
   </view>
 
   <view class="admin-action" wx:if="{{isAdmin}}">
-    <button class="admin-btn" bindtap="goToAdminPage">点击进入管理员后台</button>
-  </view>
+    </view>
 
   <view class="custom-tabbar">
     <view class="tab-item" bindtap="navToHome">看个房间</view>
-    <view class="tab-item" bindtap="navToNotes">归家手记</view>
-    <view class="tab-item" bindtap="navToMassage">一起分享</view>
+    <view class="tab-item" bindtap="navToNotes">碎碎念</view>
+    <view class="tab-item" bindtap="navToMassage">分享</view>
     <view class="tab-item active">我的</view>
   </view>
 
@@ -55,7 +62,7 @@
       <view class="modal-header">提示</view>
       <image class="cheeky-img" src="https://img.icons8.com/bubbles/200/cat.png" mode="aspectFit"></image>
       <view class="modal-text">{{randomNotice}}</view>
-      <button class="modal-btn" bindtap="closeNotice">知道了</button>
+      <button class="modal-btn" bindtap="closeNotice">.........</button>
     </view>
   </view>
 
@@ -64,7 +71,7 @@
     <view class="modal-content">
       <view class="modal-header">联系方式</view>
       <image class="cheeky-img" src="https://img.icons8.com/bubbles/200/phone.png" mode="aspectFit"></image>
-      <view class="modal-text"><text>非必要勿打电话\n17787897998</text></view>
+      <view class="modal-text"><text>非必要勿打电话\n微信:mzz1806\n电话:13398720094</text></view>
       <view class="btn-row">
         <button class="modal-btn cancel" bindtap="closeContactModal">取消</button>
         <button class="modal-btn confirm" bindtap="confirmCall">呼叫</button>

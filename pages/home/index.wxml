@@ -1,8 +1,10 @@
 <view class="container">
+  <!-- 顶部状态栏占位 -->
   <view style="height: {{navHeight}}px"></view>
 
   <scroll-view scroll-y class="main-content">
     
+    <!-- 1. 顶部轮播图 -->
     <swiper 
       class="poster-section" 
       autoplay="true" 
@@ -19,11 +21,44 @@
         </swiper-item>
       </block>
     </swiper>
+    
+    <!-- 2. 民宿政策与联系方式 -->
     <view class="policy-bar">
       <text>*为了保证居住体验</text>
       <text>民宿禁止携带15岁以下儿童、宠物以及全域禁烟。</text>
+      
+      <!-- 微信号一键复制模块 -->
+      <view bindtap="copyWechat" style="display: inline-flex; align-items: center; justify-content: center; margin-top: 8rpx; padding: 6rpx 12rpx; border-radius: 8rpx;">
+        <text style="color: #333;">微信:mzz1806</text>
+        <view style="margin-left: 12rpx; display: flex; align-items: center; justify-content: center; background: rgba(163, 167, 119, 0.25); width: 46rpx; height: 46rpx; border-radius: 50%;">
+          <image src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB4PSI5IiB5PSI5IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIyIiBzdHJva2U9IiMzZDU1M2QiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik01IDE1VjdDNSA1Ljg5NTQzIDUuODk1NDMgNSA3IDVIMTUiIHN0cm9rZT0iIzNkNTUzZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=" style="width: 26rpx; height: 26rpx;" mode="aspectFit"></image>
+        </view>
+      </view>
     </view>
 
+    <!-- 3. 实时天气与主理人心情小组件 -->
+    <view class="weather-mood-widget">
+      <!-- 客观天气 -->
+      <view class="weather-info">
+        <view class="temp-box">
+          <text class="weather-icon">{{weather.text == '晴' ? '☀️' : (weather.text == '多云' ? '⛅' : '☁️')}}</text>
+          <text class="temp">{{weather.temp}}°C</text>
+          <text class="status">{{weather.text}}</text>
+        </view>
+        <view class="advice-box">
+          <text class="advice-text">穿衣提示：{{weather.advice}}</text>
+        </view>
+      </view>
+
+      <!-- 修改：采用纯文本流结构，取消嵌套，确保引号紧跟文字 -->
+      <view class="mood-info" wx:if="{{todayMood}}">
+        <text class="quote-mark">❝ </text>
+        <text class="mood-text">{{todayMood}}</text>
+        <text class="quote-mark-end"> ❞</text>
+      </view>
+    </view>
+
+    <!-- 4. 房间列表网格 -->
     <view class="room-grid">
       <view 
         class="room-card" 
@@ -32,11 +67,11 @@
         bindtap="goToDetail" 
         data-id="{{item.id}}"
       >
-      <image 
-        class="room-img" 
-        src="{{item.img}}" 
-        mode="aspectFill" 
-      />
+        <image 
+          class="room-img" 
+          src="{{item.img}}" 
+          mode="aspectFill" 
+        />
         <view class="card-body">
           <text class="card-name">{{item.name}}</text>
           <text class="card-tag">{{item.tag}}</text>
@@ -47,10 +82,11 @@
     <view class="footer-spacer"></view>
   </scroll-view>
 
+  <!-- 5. 底部自定义导航栏 -->
   <view class="custom-tabbar">
     <view class="tab-item active">看个房间</view>
-    <view class="tab-item" bindtap="navToNotes">归家手记</view>
-    <view class="tab-item" bindtap="navToMassage">一起分享</view>
+    <view class="tab-item" bindtap="navToNotes">碎碎念</view>
+    <view class="tab-item" bindtap="navToMassage">分享</view>
     <view class="tab-item" bindtap="navToMy">我的</view>
   </view>
 </view>

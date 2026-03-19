@@ -1,12 +1,12 @@
 @theme-color: #3D553D;
-@bg-color: #ffffff;
+@bg-color: #F2EDD0;
 
 page {
-  background-color: #F2EDD0;
+  background-color: @bg-color;
   padding-bottom: 40rpx;
 }
 
-/* 返回键样式：适配不同机型刘海屏 */
+/* 返回键样式 */
 .nav-back {
   position: fixed;
   left: 30rpx;
@@ -16,7 +16,7 @@ page {
   z-index: 1000;
   width: 64rpx;
   height: 64rpx;
-  background: rgba(61, 85, 61, 0.6); /* 调整为主题色半透明 */
+  background: rgba(61, 85, 61, 0.6); /* 主题色半透明 */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -38,14 +38,14 @@ page {
 }
 
 .detail-container {
-  /* 自定义轮播图容器：用于定位内部的指示器 */
+  /* 轮播图容器 */
   .swiper-container {
     position: relative;
     width: 100%;
 
     .banner-swiper {
       width: 100%;
-      height: 1200rpx; 
+      height: 1100rpx; /* 根据您的图片比例调整 */
       .slide-media {
         width: 100%;
         height: 100%;
@@ -69,10 +69,9 @@ page {
         height: 12rpx;
         border-radius: 6rpx;
         background: rgba(255, 255, 255, 0.5);
-        transition: all 0.3s ease; /* 关键：平滑过渡变长动画 */
+        transition: all 0.3s ease;
       }
 
-      /* 激活态变长样式 */
       .dot.active {
         width: 32rpx; 
         background: #ffffff;
@@ -80,6 +79,7 @@ page {
     }
   }
 
+  /* 主信息卡片（橄榄绿背景） */
   .main-card {
     position: relative;
     margin: -60rpx 24rpx 20rpx;
@@ -92,21 +92,58 @@ page {
     .title-row .name {
       font-size: 48rpx;
       font-weight: 900;
-      color: #ffffff; /* 调整为白色以适配橄榄绿背景 */
+      color: #ffffff;
       text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
     }
     
+    /* 标签与日历按钮行 */
     .tags-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12rpx;
+      justify-content: space-between;
+      align-items: center;
       margin: 20rpx 0 30rpx;
-      .tag {
-        font-size: 22rpx;
-        color: #3D553D; /* 调整为主题色 */
-        background: rgba(255, 255, 255, 0.9); /* 调整为白色半透明 */
-        padding: 8rpx 18rpx;
-        border-radius: 8rpx;
+
+      .tags-left {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12rpx;
+
+        .tag {
+          font-size: 22rpx;
+          color: #3D553D;
+          background: rgba(255, 255, 255, 0.9);
+          padding: 8rpx 18rpx;
+          border-radius: 8rpx;
+        }
+      }
+
+      .calendar-btn {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10rpx 20rpx;
+        border-radius: 30rpx;
+        margin-left: 20rpx;
+        box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+
+        .calendar-icon {
+          width: 30rpx;
+          height: 30rpx;
+          display: block;
+        }
+
+        .calendar-text {
+          font-size: 22rpx;
+          color: #3D553D;
+          margin-left: 8rpx;
+          font-weight: bold;
+        }
+
+        &:active {
+          opacity: 0.7;
+          transform: scale(0.98);
+        }
       }
     }
 
@@ -127,12 +164,12 @@ page {
         
         &:last-child { border-right: none; }
         
-        .label { font-size: 22rpx; color: #7a8b7a; margin-bottom: 8rpx; } /* 调整为灰绿色 */
+        .label { font-size: 22rpx; color: #7a8b7a; margin-bottom: 8rpx; }
         .price-box {
           display: flex;
           align-items: baseline;
           font-weight: bold;
-          color: @theme-color; /* 调整为主题色 */
+          color: @theme-color;
           .currency { font-size: 24rpx; }
           .amount { font-size: 36rpx; }
         }
@@ -148,6 +185,7 @@ page {
     }
   }
 
+  /* 配套设施 & 空间介绍卡片 */
   .section-card {
     margin: 0 24rpx 20rpx;
     padding: 30rpx;
@@ -160,7 +198,7 @@ page {
       margin-bottom: 24rpx;
       border-left: 8rpx solid @theme-color;
       padding-left: 16rpx;
-      color: #2c3e2c; /* 调整为深绿色 */
+      color: #2c3e2c;
     }
     
     .facility-grid {
@@ -170,7 +208,7 @@ page {
         width: 33.33%;
         margin-bottom: 20rpx;
         font-size: 26rpx;
-        color: #5c665c; /* 调整为协调的灰绿色 */
+        color: #5c665c;
         .icon { color: @theme-color; margin-right: 8rpx; }
       }
     }
@@ -182,12 +220,13 @@ page {
     }
   }
 
+  /* 底部注释 */
   .note-row {
     margin: 0 44rpx 30rpx;
     text-align: left;
     text {
       font-size: 26rpx;
-      color: #7a8b7a; /* 调整为协调的浅灰绿 */
+      color: #7a8b7a;
       font-weight: normal;
       line-height: 1.5;
       display: block;

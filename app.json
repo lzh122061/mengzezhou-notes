@@ -5,7 +5,8 @@
     "pages/index/index",
     "pages/detail/index",
     "pages/admin/index",
-    "pages/notes/index"
+    "pages/notes/index",
+    "pages/calendar/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -15,5 +16,14 @@
     "navigationStyle": "custom"
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "我们需要您的位置以便为您规划导航路线"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ]
 }

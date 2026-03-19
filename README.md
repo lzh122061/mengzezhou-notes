@@ -1,55 +1,41 @@
-# 孟沢洲手账小程序
+孟沢洲手账 - 智慧民宿小程序
 
-本项目是基于 TDesign 打造的通用页面模板进行的深度定制版本。主要用于个人手账管理，包含经过魔改的登录注册、个人中心及特色游览指南功能。
+这是一个基于微信小程序云开发构建的精品民宿管理与展示平台。
 
-## 模版功能预览
+🌟 本次更新 (2024-03-19)
 
-### 游览指南 (Massage)
-> **说明**：原有的 guide 页面已重构为全新的 massage 页面，作为项目的核心导览入口。
+1. 首页动态组件
 
-<div style="display: flex">
-  <img width="375" alt="游览指南页面预览" src="./massage.png">
-</div>
+实时天气模块：接入和风天气 API，实时展示大理当地天气、温度及穿衣建议。
 
-### 首页与核心功能
-<div style="display: flex">
-  <img width="375" alt="首页预览" src="./home.png">
-  <img width="375" alt="功能预览" src="./feature.png">
-</div>
+主理人心情 (Owner's Mood)：新增感性展示区，支持主理人每日碎碎念，采用优雅的引号排版。
 
+2. 交互优化
 
-## 项目特点
-- **样式升级**：全量使用 `less` 文件编写样式，不包含任何 `wxss` 文件。
-- **页面魔改**：根据个人需求对 TDesign 原始组件进行了深度二次开发。
-- **结构优化**：移除了冗余的 guide 页面，统一由 massage 页面承载游览指南。
+微信号一键复制：在首页政策栏新增微信复制功能，配有精美的矢量图标，提升用户沟通效率。
 
-## 开发预览
+排版微调：优化了心情文字的行高与间距，确保在不同机型下均有精致的阅读体验。
 
-### 在开发者工具中预览
+3. 后台管理系统升级
 
-```bash
-# 安装项目依赖
-npm install
+心情管理卡片：管理员可在后台直接编辑、更新“今日心情”。
 
-```
+动态折叠逻辑：若后台心情内容为空，前台组件将自动隐藏，保持界面整洁。
 
-打开[微信开发者工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)，导入整个项目，构建 npm 包，就可以预览示例了。
+🛠️ 技术栈
 
-### 基础库版本
+前端：原生微信小程序框架 (WXML / LESS / JS)
 
-最低基础库版本`^2.6.5`
+后端：微信小程序云开发 (Cloud Development)
 
+数据库：云开发数据库 (Cloud Firestore)
 
-## 贡献成员
+API：和风天气开发版 API
 
-<a href="https://github.com/TDesignOteam/tdesign-miniprogram-starter/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=TDesignOteam/tdesign-miniprogram-starter" />
-</a>
+🚀 部署注意
 
-## 反馈
+域名白名单：请确保在微信后台添加 https://mv5n8n5xjc.re.qweatherapi.com 为合法 request 域名。
 
-有任何问题，建议通过 [Github issues](https://github.com/TDesignOteam/tdesign-miniprogram-starter/issues) 反馈。
+API Key：天气功能需配置有效的和风天气 Web API Key。
 
-## 开源协议
-
-TDesign 遵循 [MIT 协议](https://github.com/TDesignOteam/tdesign-miniprogram-starter/blob/main/LICENSE)。
+云环境：请确保云开发环境 ID 已在 app.js 中正确初始化。

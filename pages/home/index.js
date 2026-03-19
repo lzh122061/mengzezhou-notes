@@ -1,6 +1,16 @@
 const db = wx.cloud.database();
+// 引入文件管理器，用于缓存
+const fs = wx.getFileSystemManager();
+const CACHE_KEY = 'img_cache_map_v1'; // 缓存映射表的key
+
 // 基础地址 (用于兜底默认图)
 const CLOUD_BASE = 'cloud://cloud1-7gvskpoo2a3897dc.636c-cloud1-7gvskpoo2a3897dc-1392473051';
+
+// 和风天气 API 配置
+const WEATHER_API_KEY = '8f626237e3444b588565679093953c0a'; 
+const DALI_LOCATION_ID = '101290901'; // 云南大理的城市代码
+// ★ 核心修复：使用你提供的专属 API Host
+const WEATHER_HOST = 'mv5n8n5xjc.re.qweatherapi.com';
 
 const ROOM_META = {
   '101': { type: '客房', tag: '静谧空间 · 阳光充足' },
@@ -18,17 +28,75 @@ Page({
     navHeight: 0,
     banners: [],   // 轮播图数据
     topPoster: '', // 兼容字段
-    roomList: []   
+    roomList: [],
+    // 天气与心情数据
+    weather: {
+      temp: '--',
+      text: '获取中...',
+      advice: '正在为您获取最新天气与穿衣建议...'
+    },
+    todayMood: '' // 主理人心情
   },
 
   onLoad() {
-    const sys = wx.getSystemInfoSync();
+    // 适配最新微信 API，获取状态栏高度
+    const sys = wx.getWindowInfo(); 
     this.setData({ navHeight: sys.statusBarHeight });
     this.loadData();
+    this.fetchWeather(); 
   },
 
   onShow() {
     this.loadData();
+  },
+
+  // 获取实时天气与穿衣指数
+  fetchWeather() {
+    const that = this;
+    
+    // 1. 获取实时天气 (温度和天气状况)
+    // 使用专属 Host 进行请求
+    wx.request({
+      url: `https://${WEATHER_HOST}/v7/weather/now?location=${DALI_LOCATION_ID}&key=${WEATHER_API_KEY}`,
+      success: (res) => {
+        const data = res.data;
+        if (typeof data === 'object' && data.code === '200') {
+          const now = data.now;
+          that.setData({
+            'weather.temp': now.temp,
+            'weather.text': now.text
+          });
+        } else {
+          console.error('天气接口异常，返回内容:', data);
+          that.setData({
+            'weather.text': '获取失败',
+            'weather.temp': '-'
+          });
+        }
+      },
+      fail: (err) => {
+        console.error('天气网络请求失败:', err);
+      }
+    });
+
+    // 2. 获取生活指数 (type=3 为穿衣指数)
+    wx.request({
+      url: `https://${WEATHER_HOST}/v7/indices/1d?type=3&location=${DALI_LOCATION_ID}&key=${WEATHER_API_KEY}`,
+      success: (res) => {
+        const data = res.data;
+        if (typeof data === 'object' && data.code === '200') {
+          const daily = data.daily;
+          if (daily && daily.length > 0) {
+            that.setData({
+              'weather.advice': daily[0].text
+            });
+          }
+        } else {
+          console.error('生活指数接口异常:', data);
+          that.setData({ 'weather.advice': '请确认专属 Host 已在微信后台配置并生效' });
+        }
+      }
+    });
   },
 
   async loadData() {
@@ -38,66 +106,97 @@ Page({
         db.collection('rooms').orderBy('id', 'asc').get()
       ]);
 
-      // ============================================
-      // Part A. 首页轮播图处理 (完全参照房间逻辑)
-      // ============================================
+      // Part A. 首页轮播图处理 & 主理人心情提取
       let config = {};
+      let moodStr = ''; 
+      
       if (configRes.data.length > 0) {
         config = configRes.data[0];
+        if (config.today_mood && typeof config.today_mood === 'string') {
+          moodStr = config.today_mood.trim();
+        }
       }
 
       let banners = [];
-
-      // 1. 优先级一：数据库 (Admin后台上传的图)
-      // 这里的 home_banner 存的就是 "cloud://.../images/..." 这种路径
       if (config.home_banner) {
         if (Array.isArray(config.home_banner)) {
-          banners = config.home_banner; // 如果是多张
+          banners = config.home_banner; 
         } else {
-          banners = [config.home_banner]; // 如果是单张，转为数组
+          banners = [config.home_banner];
         }
       } 
       
-      // 2. 优先级二：兜底 (如果数据库没图，读默认路径)
-      // 逻辑和房间的 `${CLOUD_BASE}/rooms/${id}/cover.jpg` 保持一致
-      if (banners.length === 0) {
+      if (!banners || banners.length === 0) {
         banners = [`${CLOUD_BASE}/home/poster.jpg`];
       }
 
-      // 更新 topPoster (兼容旧逻辑)
-      const topPoster = banners.length > 0 ? banners[0] : '';
+      const validBanners = banners.filter(url => 
+        url && typeof url === 'string' && url.trim().length > 0
+      );
 
+      const cachedBanners = await Promise.all(validBanners.map(url => this.getLocalImage(url)));
+      const topPoster = cachedBanners.length > 0 ? cachedBanners[0] : '';
 
-      // ============================================
-      // Part B. 房间列表处理 (保持不变)
-      // ============================================
+      // Part B. 房间列表处理
       const dbRooms = roomsRes.data;
       
-      let newRoomList = dbRooms.map(item => {
+      let newRoomList = await Promise.all(dbRooms.map(async item => {
         const meta = ROOM_META[item.id] || { type: '客房', tag: '' };
         
-        // 房间图片逻辑：优先DB -> 否则默认
-        let imgUrl = item.cover_image;
-        if (!imgUrl) {
+        let imgUrl = '';
+        if (item.cover_image) {
+             if (Array.isArray(item.cover_image)) {
+                imgUrl = item.cover_image[0]; 
+             } else {
+                imgUrl = item.cover_image;
+             }
+        }
+
+        if (!imgUrl || typeof imgUrl !== 'string' || imgUrl.trim() === '') {
           imgUrl = `${CLOUD_BASE}/rooms/${item.id}/cover.jpg`;
         }
+
+        const cachedImgUrl = await this.getLocalImage(imgUrl);
 
         return {
           id: item.id,
           name: item.name,
           type: meta.type,
           tag: meta.tag,
-          img: imgUrl 
+          img: cachedImgUrl 
         };
-      });
+      }));
 
-      // 追加公区 (保持不变)
+      // Part C. 公区图片处理
+      let kitchenUrl = '';
+      if (config.kitchen_img) {
+          if (Array.isArray(config.kitchen_img)) kitchenUrl = config.kitchen_img[0];
+          else kitchenUrl = config.kitchen_img;
+      }
+      if (!kitchenUrl || typeof kitchenUrl !== 'string' || kitchenUrl.trim() === '') {
+          kitchenUrl = `${CLOUD_BASE}/rooms/kitchen/cover.jpg`;
+      }
+
+      let publicUrl = '';
+      if (config.public_area_img) {
+          if (Array.isArray(config.public_area_img)) publicUrl = config.public_area_img[0];
+          else publicUrl = config.public_area_img;
+      }
+      if (!publicUrl || typeof publicUrl !== 'string' || publicUrl.trim() === '') {
+          publicUrl = `${CLOUD_BASE}/rooms/public/cover.jpg`;
+      }
+
+      const [cachedKitchen, cachedPublic] = await Promise.all([
+        this.getLocalImage(kitchenUrl),
+        this.getLocalImage(publicUrl)
+      ]);
+
       newRoomList.push({
         id: 'kitchen',
         name: '共享厨房',
         type: '公区',
         tag: '全套厨具 · 烟火气息',
-        img: config.kitchen_img || `${CLOUD_BASE}/rooms/kitchen/cover.jpg`
+        img: cachedKitchen
       });
 
       newRoomList.push({
@@ -105,18 +204,81 @@ Page({
         name: '休闲公区',
         type: '公区',
         tag: '阅读娱乐 · 社交中心',
-        img: config.public_area_img || `${CLOUD_BASE}/rooms/public/cover.jpg`
+        img: cachedPublic
       });
 
       this.setData({
-        banners,
+        banners: cachedBanners,
         topPoster,
-        roomList: newRoomList
+        roomList: newRoomList,
+        todayMood: moodStr 
       });
 
     } catch (err) {
       console.error('首页加载数据失败', err);
     }
+  },
+
+  async getLocalImage(cloudUrl) {
+    if (!cloudUrl) return ''; 
+    if (typeof cloudUrl !== 'string') return '';
+    if (cloudUrl.trim() === '') return '';
+    if (!cloudUrl.startsWith('cloud://')) return cloudUrl;
+
+    let cacheMap = wx.getStorageSync(CACHE_KEY) || {};
+    const localPath = cacheMap[cloudUrl];
+
+    if (localPath) {
+      try {
+        fs.accessSync(localPath);
+        return localPath; 
+      } catch (e) {
+        delete cacheMap[cloudUrl];
+        wx.setStorageSync(CACHE_KEY, cacheMap);
+      }
+    }
+
+    try {
+      if (!cloudUrl) throw new Error('Empty URL');
+
+      const res = await wx.cloud.downloadFile({ fileID: cloudUrl });
+      const tempPath = res.tempFilePath;
+
+      const fileName = tempPath.substring(tempPath.lastIndexOf('/') + 1);
+      const savedPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+
+      await new Promise((resolve, reject) => {
+        fs.saveFile({
+          tempFilePath: tempPath,
+          filePath: savedPath,
+          success: resolve,
+          fail: reject
+        });
+      });
+
+      cacheMap = wx.getStorageSync(CACHE_KEY) || {}; 
+      cacheMap[cloudUrl] = savedPath;
+      wx.setStorageSync(CACHE_KEY, cacheMap);
+
+      return savedPath;
+    } catch (err) {
+      console.log('图片缓存下载跳过:', err.errMsg || err);
+      return cloudUrl; 
+    }
+  },
+
+  // 一键复制微信号
+  copyWechat() {
+    wx.setClipboardData({
+      data: 'mzz1806',
+      success: function () {
+        wx.showToast({
+          title: '已复制',
+          icon: 'success',
+          duration: 2000
+        });
+      }
+    });
   },
 
   goToDetail(e) {
@@ -127,20 +289,27 @@ Page({
   },
 
   navToMassage() {
-    wx.reLaunch({ 
-      url: '/pages/massage/index' 
-    });
+    wx.reLaunch({ url: '/pages/massage/index' });
   },
 
   navToNotes() {
-    wx.reLaunch({ 
-      url: '/pages/notes/index' 
-    });
+    wx.reLaunch({ url: '/pages/notes/index' });
   },
 
   navToMy() {
-    wx.reLaunch({ 
-      url: '/pages/index/index' 
-    });
+    wx.reLaunch({ url: '/pages/index/index' });
+  },
+
+  onShareAppMessage: function () {
+    return {
+      title: '孟沢洲三号院',
+      path: '/pages/notes/index'
+    }
+  },
+
+  onShareTimeline: function () {
+    return {
+      title: '孟沢洲三号院'
+    }
   }
 });

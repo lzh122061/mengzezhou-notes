@@ -1,110 +1,127 @@
 <view class="container">
+  <view class="detail-container">
+    <view style="height: {{navHeight}}px; width: 100%;"></view>
 
-<view class="detail-container">
-  <view style="height: {{navHeight}}px; width: 100%;"></view>
-
-  <view class="nav-back" bindtap="goBack" style="top: {{statusBarHeight + 6}}px;">
-    <text class="back-arrow">❮</text>
-  </view>
-
-  <view class="swiper-container">
-    <swiper 
-      class="banner-swiper" 
-      indicator-dots="{{false}}" 
-      autoplay="true" 
-      interval="3000" 
-      duration="500" 
-      circular="true"
-      bindchange="onSwiperChange"
-    >
-      <block wx:for="{{room.images}}" wx:key="*this">
-        <swiper-item>
-          <image src="{{item}}" mode="aspectFill" class="slide-media" />
-        </swiper-item>
-      </block>
-    </swiper>
-
-    <view class="indicator-wrapper">
-      <view 
-        wx:for="{{room.images}}" 
-        wx:key="index" 
-        class="dot {{currentSwiper == index ? 'active' : ''}}"
-      ></view>
+    <view class="nav-back" bindtap="goBack" style="top: {{statusBarHeight + 6}}px;">
+      <text class="back-arrow">❮</text>
     </view>
-  </view>
 
-  <view class="main-card">
-    <view class="title-row">
-      <text class="name">{{room.name}}</text>
+    <view class="swiper-container">
+      <swiper 
+        class="banner-swiper" 
+        indicator-dots="{{false}}" 
+        autoplay="true" 
+        interval="3000" 
+        duration="500" 
+        circular="true"
+        bindchange="onSwiperChange"
+      >
+        <block wx:for="{{room.images}}" wx:key="*this">
+          <swiper-item>
+            <image src="{{item}}" mode="aspectFill" class="slide-media" />
+          </swiper-item>
+        </block>
+      </swiper>
+
+      <view class="indicator-wrapper">
+        <view 
+          wx:for="{{room.images}}" 
+          wx:key="index" 
+          class="dot {{currentSwiper == index ? 'active' : ''}}"
+        ></view>
+      </view>
+    </view>
+
+    <view class="main-card">
+      <view class="title-row">
+        <text class="name">{{room.name}}</text>
+      </view>
+      
+      <view class="tags-row" wx:if="{{room.tags}}">
+        <view class="tags-left">
+          <text class="tag" wx:for="{{room.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+
+        <view class="calendar-btn" 
+              bindtap="navToCalendar" 
+              wx:if="{{room.id !== 'kitchen' && room.id !== 'public' && room.name !== '共享厨房' && room.name !== '休闲公区'}}">
+          <image src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTkgNEg1QzMuODk1NDMgNCAzIDQuODk1NDMgMyA2VjIwQzMgMjEuMTA0NiAzLjg5NTQzIDIyIDUgMjJIMTlDMjAuMTA0NiAyMiAyMSAyMS4xMDQ2IDIxIDIwVjZDMTkgNC44OTU0MyAyMC4xMDQ2IDQgMTkgNFoiIHN0cm9rZT0iIzNENTUzRCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTYgMlY2IiBzdHJva2U9IzNENTUzRCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNOCAyVjYiIHN0cm9rZT0iIzNENTUzRCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTEgMTRAOWYxNkgxMVYxNFoiIGZpbGw9IiMzRDU1M0QiLz48cGF0aCBkPSJNMTUgMTRIMTNWMTZIMTVWMTRaIiBmaWxsPSIjM0Q1NTNEIi8+PHBhdGggZD0iTTExIDE4SDlWMjBIMTFWMThaIiBmaWxsPSIjM0Q1NTNEIi8+PHBhdGggZD0iTTE1IDE4SDEzVjIwSDE1VjE4WiIgZmlsbD0iIzNENTUzRCIvPjxwYXRoIGQ9Ik0zIDEwSDIxIiBzdHJva2U9IzNENTUzRCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+" mode="aspectFit" class="calendar-icon"></image>
+          <text class="calendar-text">预订查询</text>
+        </view>
+      </view>
+
+      <view class="price-grid" wx:if="{{room.price_day}}">
+        <view class="price-item">
+          <text class="label">日租</text>
+          <view class="price-box">
+            <text class="currency">¥</text>
+            <text class="amount">{{room.price_day || '-'}}</text>
+          </view>
+          <text class="time">1晚</text>
+        </view>
+
+        <view class="price-item">
+          <text class="label">节假日</text>
+          <view class="price-box">
+            <text class="currency">¥</text>
+            <text class="amount">{{room.price_holiday || '-'}}</text>
+          </view>
+          <text class="time">1晚</text>
+        </view>
+
+        <view class="price-item">
+          <text class="label">周租</text>
+          <view class="price-box">
+            <text class="currency">¥</text>
+            <text class="amount">{{room.price_week || '-'}}</text>
+          </view>
+          <text class="time">7晚</text>
+        </view>
+
+        <view class="price-item">
+          <text class="label">半月租</text>
+          <view class="price-box">
+            <text class="currency">¥</text>
+            <text class="amount">{{room.price_half_month || '-'}}</text>
+          </view>
+          <text class="time">15晚</text>
+        </view>
+
+        <view class="price-item highlight">
+          <text class="label">月租</text>
+          <view class="price-box">
+            <text class="currency">¥</text>
+            <text class="amount">{{room.price_month || '-'}}</text>
+          </view>
+          <text class="time">30晚</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">配套设施</view>
+      <view class="facility-grid">
+        <block wx:if="{{room.facilities && room.facilities.length > 0}}">
+          <view class="item" wx:for="{{room.facilities}}" wx:key="*this">
+            <text class="icon">✓</text>
+            <text class="text">{{item}}</text>
+          </view>
+        </block>
+        <block wx:else>
+            <text style="font-size:26rpx; color:#999;">全套高品质家私家电</text>
+        </block>
+      </view>
+    </view>
+
+    <view class="note-row" wx:if="{{room.price_day}}">
+      <text>注：日租、节假日及周租提供一次性用品，半月租及月租需自行购买一次性用品</text>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">空间介绍</view>
+      <text class="desc-text">{{room.desc || '暂无详细介绍'}}</text>
     </view>
     
-    <view class="tags-row" wx:if="{{room.tags}}">
-      <text class="tag" wx:for="{{room.tags}}" wx:key="*this">{{item}}</text>
-    </view>
-
-    <view class="price-grid" wx:if="{{room.price_day}}">
-      <view class="price-item">
-        <text class="label">日租</text>
-        <view class="price-box">
-          <text class="currency">¥</text>
-          <text class="amount">{{room.price_day || '-'}}</text>
-        </view>
-        <text class="time">1晚</text>
-      </view>
-
-      <view class="price-item">
-        <text class="label">周租</text>
-        <view class="price-box">
-          <text class="currency">¥</text>
-          <text class="amount">{{room.price_week || '-'}}</text>
-        </view>
-        <text class="time">7晚</text>
-      </view>
-
-      <view class="price-item">
-        <text class="label">半月租</text>
-        <view class="price-box">
-          <text class="currency">¥</text>
-          <text class="amount">{{room.price_half_month || '-'}}</text>
-        </view>
-        <text class="time">15晚</text>
-      </view>
-
-      <view class="price-item highlight">
-        <text class="label">月租</text>
-        <view class="price-box">
-          <text class="currency">¥</text>
-          <text class="amount">{{room.price_month || '-'}}</text>
-        </view>
-        <text class="time">30晚</text>
-      </view>
-    </view>
+    <view class="safe-bottom"></view>
   </view>
-
-  <view class="section-card">
-    <view class="section-title">配套设施</view>
-    <view class="facility-grid">
-      <block wx:if="{{room.facilities && room.facilities.length > 0}}">
-        <view class="item" wx:for="{{room.facilities}}" wx:key="*this">
-          <text class="icon">✓</text>
-          <text class="text">{{item}}</text>
-        </view>
-      </block>
-      <block wx:else>
-         <text style="font-size:26rpx; color:#999;">全套高品质家私家电</text>
-      </block>
-    </view>
-  </view>
-
-  <view class="note-row" wx:if="{{room.price_day}}">
-    <text>注：日租及周租提供一次性用品，半月租及月租需自行购买一次性用品</text>
-  </view>
-
-  <view class="section-card">
-    <view class="section-title">空间介绍</view>
-    <text class="desc-text">{{room.desc || '暂无详细介绍'}}</text>
-  </view>
-  
-  <view class="safe-bottom"></view>
-</view>
 </view>
