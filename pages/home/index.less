@@ -21,49 +21,49 @@
   // === 适配 Swiper 轮播图 ===
   .poster-section {
     width: 100%;
-    height: 1000rpx; 
+    height: 1000rpx;
 
     .top-poster {
       width: 100%;
-      height: 100%; 
+      height: 100%;
       display: block;
     }
 
     .wx-swiper-dot {
       width: 12rpx;
       height: 12rpx;
-      background: rgba(255, 255, 255, 0.5); 
+      background: rgba(255, 255, 255, 0.5);
       border-radius: 50%;
       transition: all 0.3s;
     }
 
     .wx-swiper-dot-active {
-      width: 40rpx;       
+      width: 40rpx;      
       height: 12rpx;      
-      background: #ffffff; 
-      border-radius: 6rpx; 
+      background: #ffffff;
+      border-radius: 6rpx;
     }
   }
 
   // === 政策栏与复制按钮 ===
   .policy-bar {
     padding: 40rpx 40rpx 20rpx 40rpx;
-    text-align: center; 
+    text-align: center;
     
     text {
       font-size: 28rpx;
-      color: #333333; 
-      line-height: 1.8; 
-      font-weight: 400; 
+      color: #333333;
+      line-height: 1.8;
+      font-weight: 400;
       letter-spacing: 1rpx;
-      display: block; 
+      display: block;
     }
   }
 
   // ==================== 天气与心情组件样式 ====================
   .weather-mood-widget {
-    margin: 0 24rpx 30rpx 24rpx; 
-    background: rgba(224, 218, 176, 0.4); 
+    margin: 0 24rpx 30rpx 24rpx;
+    background: rgba(224, 218, 176, 0.4);
     border-radius: 16rpx;
     padding: 24rpx;
     box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
@@ -73,65 +73,74 @@
       
       .temp-box {
         display: flex;
-        align-items: center;
-        margin-bottom: 8rpx;
+        align-items: center; // 垂直居中
+        margin-bottom: 24rpx; // 稍微增加下边距，增加呼吸感
 
         .weather-icon {
+          font-size: 38rpx; // 图标大小
+          margin-right: 14rpx;
+        }
+        
+        .temp-bold {
           font-size: 32rpx;
-          margin-right: 12rpx;
-        }
-        .temp {
-          font-size: 36rpx;
           font-weight: bold;
-          color: #112116;
-          margin-right: 12rpx;
-        }
-        .status {
-          font-size: 28rpx;
-          color: #3D553D;
+          color: #2c3525; // 颜色调整为稍微柔和的深墨绿色
+          letter-spacing: 1rpx; // 增加一点字间距，显得不拥挤
         }
       }
 
       .advice-box {
-        .advice-text {
-          font-size: 24rpx;
-          color: #7d805c;
+        .advice-item {
+          display: block;
+          margin-bottom: 8rpx;
           line-height: 1.5;
+
+          .advice-title {
+            font-size: 26rpx; 
+            font-weight: bold; 
+            color: #5c5f43; 
+          }
+
+          .advice-content {
+            font-size: 24rpx; 
+            font-weight: normal; 
+            color: #7d805c; 
+          }
         }
       }
     }
 
     // ★ 核心修改：心情区域样式 ★
     .mood-info {
-      border-top: 1rpx dashed rgba(125, 128, 92, 0.3); 
+      border-top: 1rpx dashed rgba(125, 128, 92, 0.3);
       padding-top: 16rpx;
-      line-height: 1.4; // 压缩行高，还原图一的紧凑感
-      text-align: justify; 
+      line-height: 1.4; 
+      text-align: justify;
 
       .quote-mark {
-        font-size: 34rpx; // 稍微调小一点，更精致
+        font-size: 34rpx; 
         color: #A3A777;
-        font-family: Georgia, serif; 
-        display: inline; 
+        font-family: Georgia, serif;
+        display: inline;
         margin-right: 4rpx;
-        vertical-align: middle; // 垂直居中对齐文字
+        vertical-align: middle; 
       }
 
       .mood-text {
         font-size: 26rpx;
         color: #333333;
-        font-style: italic; 
-        display: inline; 
+        font-style: italic;
+        display: inline;
         vertical-align: middle;
       }
       
       .quote-mark-end {
         font-size: 34rpx;
         color: #A3A777;
-        font-family: Georgia, serif; 
-        display: inline; 
+        font-family: Georgia, serif;
+        display: inline;
         margin-left: 4rpx;
-        vertical-align: middle; // 紧贴文字末尾
+        vertical-align: middle; 
       }
     }
   }
@@ -149,7 +158,7 @@
       border-radius: 16rpx;
       overflow: hidden;
       margin-bottom: 24rpx;
-      box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.06); 
+      box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.06);
 
       .room-img {
         width: 100%;

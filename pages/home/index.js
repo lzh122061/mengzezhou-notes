@@ -7,8 +7,8 @@ const CACHE_KEY = 'img_cache_map_v1'; // 缓存映射表的key
 const CLOUD_BASE = 'cloud://cloud1-7gvskpoo2a3897dc.636c-cloud1-7gvskpoo2a3897dc-1392473051';
 
 // 和风天气 API 配置
-const WEATHER_API_KEY = '8f626237e3444b588565679093953c0a'; 
-const DALI_LOCATION_ID = '101290901'; // 云南大理的城市代码
+const WEATHER_API_KEY = '8f626237e3444b588565679093953c0a';
+const DALI_LOCATION_ID = '101290201'; // 云南大理的城市代码
 // ★ 核心修复：使用你提供的专属 API Host
 const WEATHER_HOST = 'mv5n8n5xjc.re.qweatherapi.com';
 
@@ -33,17 +33,20 @@ Page({
     weather: {
       temp: '--',
       text: '获取中...',
-      advice: '正在为您获取最新天气与穿衣建议...'
+      advice: '正在为您获取最新天气与穿衣建议...',
+      uv: '获取中...', // 紫外线初始状态
+      tempRange: '--', // 全天温度区间初始状态
+      date: `${new Date().getMonth() + 1}月${new Date().getDate()}日` // 自动获取今天的月和日
     },
     todayMood: '' // 主理人心情
   },
 
   onLoad() {
     // 适配最新微信 API，获取状态栏高度
-    const sys = wx.getWindowInfo(); 
+    const sys = wx.getWindowInfo();
     this.setData({ navHeight: sys.statusBarHeight });
     this.loadData();
-    this.fetchWeather(); 
+    this.fetchWeather();
   },
 
   onShow() {
@@ -55,7 +58,6 @@ Page({
     const that = this;
     
     // 1. 获取实时天气 (温度和天气状况)
-    // 使用专属 Host 进行请求
     wx.request({
       url: `https://${WEATHER_HOST}/v7/weather/now?location=${DALI_LOCATION_ID}&key=${WEATHER_API_KEY}`,
       success: (res) => {
@@ -79,21 +81,48 @@ Page({
       }
     });
 
-    // 2. 获取生活指数 (type=3 为穿衣指数)
+    // 2. 获取生活指数 (type=3,5 一次性获取穿衣和紫外线指数)
     wx.request({
-      url: `https://${WEATHER_HOST}/v7/indices/1d?type=3&location=${DALI_LOCATION_ID}&key=${WEATHER_API_KEY}`,
+      url: `https://${WEATHER_HOST}/v7/indices/1d?type=3,5&location=${DALI_LOCATION_ID}&key=${WEATHER_API_KEY}`,
       success: (res) => {
         const data = res.data;
         if (typeof data === 'object' && data.code === '200') {
           const daily = data.daily;
           if (daily && daily.length > 0) {
+            let adviceText = '暂无建议';
+            let uvText = '--';
+
+            daily.forEach(item => {
+              if (item.type === '3') adviceText = item.text; // 穿衣提示具体文案
+              if (item.type === '5') uvText = item.category; // 紫外线强度级别
+            });
+
             that.setData({
-              'weather.advice': daily[0].text
+              'weather.advice': adviceText,
+              'weather.uv': uvText
             });
           }
         } else {
           console.error('生活指数接口异常:', data);
           that.setData({ 'weather.advice': '请确认专属 Host 已在微信后台配置并生效' });
+        }
+      }
+    });
+
+    // 3. 获取今天全天温度区间
+    wx.request({
+      url: `https://${WEATHER_HOST}/v7/weather/3d?location=${DALI_LOCATION_ID}&key=${WEATHER_API_KEY}`,
+      success: (res) => {
+        const data = res.data;
+        if (typeof data === 'object' && data.code === '200') {
+          const today = data.daily[0]; 
+          if (today) {
+            that.setData({
+              'weather.tempRange': `${today.tempMin}~${today.tempMax}°` // 格式化为 5~20°
+            });
+          }
+        } else {
+          console.error('全天温度获取异常:', data);
         }
       }
     });
@@ -106,9 +135,8 @@ Page({
         db.collection('rooms').orderBy('id', 'asc').get()
       ]);
 
-      // Part A. 首页轮播图处理 & 主理人心情提取
       let config = {};
-      let moodStr = ''; 
+      let moodStr = '';
       
       if (configRes.data.length > 0) {
         config = configRes.data[0];
@@ -120,24 +148,23 @@ Page({
       let banners = [];
       if (config.home_banner) {
         if (Array.isArray(config.home_banner)) {
-          banners = config.home_banner; 
+          banners = config.home_banner;
         } else {
           banners = [config.home_banner];
         }
-      } 
+      }
       
       if (!banners || banners.length === 0) {
         banners = [`${CLOUD_BASE}/home/poster.jpg`];
       }
 
-      const validBanners = banners.filter(url => 
+      const validBanners = banners.filter(url =>
         url && typeof url === 'string' && url.trim().length > 0
       );
 
       const cachedBanners = await Promise.all(validBanners.map(url => this.getLocalImage(url)));
       const topPoster = cachedBanners.length > 0 ? cachedBanners[0] : '';
 
-      // Part B. 房间列表处理
       const dbRooms = roomsRes.data;
       
       let newRoomList = await Promise.all(dbRooms.map(async item => {
@@ -146,7 +173,7 @@ Page({
         let imgUrl = '';
         if (item.cover_image) {
              if (Array.isArray(item.cover_image)) {
-                imgUrl = item.cover_image[0]; 
+                imgUrl = item.cover_image[0];
              } else {
                 imgUrl = item.cover_image;
              }
@@ -163,11 +190,10 @@ Page({
           name: item.name,
           type: meta.type,
           tag: meta.tag,
-          img: cachedImgUrl 
+          img: cachedImgUrl
         };
       }));
 
-      // Part C. 公区图片处理
       let kitchenUrl = '';
       if (config.kitchen_img) {
           if (Array.isArray(config.kitchen_img)) kitchenUrl = config.kitchen_img[0];
@@ -211,7 +237,7 @@ Page({
         banners: cachedBanners,
         topPoster,
         roomList: newRoomList,
-        todayMood: moodStr 
+        todayMood: moodStr
       });
 
     } catch (err) {
@@ -220,7 +246,7 @@ Page({
   },
 
   async getLocalImage(cloudUrl) {
-    if (!cloudUrl) return ''; 
+    if (!cloudUrl) return '';
     if (typeof cloudUrl !== 'string') return '';
     if (cloudUrl.trim() === '') return '';
     if (!cloudUrl.startsWith('cloud://')) return cloudUrl;
@@ -231,7 +257,7 @@ Page({
     if (localPath) {
       try {
         fs.accessSync(localPath);
-        return localPath; 
+        return localPath;
       } catch (e) {
         delete cacheMap[cloudUrl];
         wx.setStorageSync(CACHE_KEY, cacheMap);
@@ -256,18 +282,17 @@ Page({
         });
       });
 
-      cacheMap = wx.getStorageSync(CACHE_KEY) || {}; 
+      cacheMap = wx.getStorageSync(CACHE_KEY) || {};
       cacheMap[cloudUrl] = savedPath;
       wx.setStorageSync(CACHE_KEY, cacheMap);
 
       return savedPath;
     } catch (err) {
       console.log('图片缓存下载跳过:', err.errMsg || err);
-      return cloudUrl; 
+      return cloudUrl;
     }
   },
 
-  // 一键复制微信号
   copyWechat() {
     wx.setClipboardData({
       data: 'mzz1806',
@@ -283,8 +308,8 @@ Page({
 
   goToDetail(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({ 
-      url: `/pages/detail/index?id=${id}` 
+    wx.navigateTo({
+      url: `/pages/detail/index?id=${id}`
     });
   },
 

@@ -5,12 +5,12 @@
   <scroll-view scroll-y class="main-content">
     
     <!-- 1. 顶部轮播图 -->
-    <swiper 
-      class="poster-section" 
-      autoplay="true" 
-      circular="true" 
-      interval="3000" 
-      duration="500" 
+    <swiper
+      class="poster-section"
+      autoplay="true"
+      circular="true"
+      interval="3000"
+      duration="500"
       indicator-dots="{{banners.length > 1}}"
       indicator-color="rgba(255, 255, 255, 0.5)"
       indicator-active-color="#ffffff"
@@ -40,17 +40,46 @@
     <view class="weather-mood-widget">
       <!-- 客观天气 -->
       <view class="weather-info">
+      
+      <!-- 天气图标智能转换工具 (WXS) -->
+      <wxs module="iconTools">
+          module.exports = {
+            getIcon: function(text) {
+              if (!text) return '☁️';
+              if (text.indexOf('晴') !== -1) return '☀️';
+              if (text.indexOf('云') !== -1) return '⛅';
+              if (text.indexOf('阴') !== -1) return '☁️';
+              if (text.indexOf('雷') !== -1) return '⛈️';
+              if (text.indexOf('雨') !== -1) return '🌧️';
+              if (text.indexOf('雪') !== -1) return '❄️';
+              if (text.indexOf('冰') !== -1 || text.indexOf('雹') !== -1) return '🌨️';
+              if (text.indexOf('雾') !== -1 || text.indexOf('霾') !== -1) return '🌫️';
+              if (text.indexOf('风') !== -1) return '💨';
+              return '☁️'; // 兜底默认图标
+            }
+          }
+        </wxs>
+
+        <!-- 极简气温行排版 -->
         <view class="temp-box">
-          <text class="weather-icon">{{weather.text == '晴' ? '☀️' : (weather.text == '多云' ? '⛅' : '☁️')}}</text>
-          <text class="temp">{{weather.temp}}°C</text>
-          <text class="status">{{weather.text}}</text>
+          <!-- 这里的 iconTools.getIcon 是之前用 WXS 智能判断天气的工具，或者你之前用的三元表达式 -->
+          <text class="weather-icon">{{iconTools.getIcon ? iconTools.getIcon(weather.text) : (weather.text == '晴' ? '☀️' : (weather.text == '多云' ? '⛅' : '☁️'))}}</text>
+          <text class="temp-bold">{{weather.tempRange}}</text>
         </view>
+
         <view class="advice-box">
-          <text class="advice-text">穿衣提示：{{weather.advice}}</text>
+          <view class="advice-item">
+            <text class="advice-title">穿衣提示：</text>
+            <text class="advice-content">{{weather.advice}}</text>
+          </view>
+          <view class="advice-item">
+            <text class="advice-title">紫外线指数：</text>
+            <text class="advice-content">{{weather.uv}}</text>
+          </view>
         </view>
       </view>
 
-      <!-- 修改：采用纯文本流结构，取消嵌套，确保引号紧跟文字 -->
+      <!-- 心情区域 -->
       <view class="mood-info" wx:if="{{todayMood}}">
         <text class="quote-mark">❝ </text>
         <text class="mood-text">{{todayMood}}</text>
@@ -60,17 +89,17 @@
 
     <!-- 4. 房间列表网格 -->
     <view class="room-grid">
-      <view 
-        class="room-card" 
-        wx:for="{{roomList}}" 
-        wx:key="id" 
-        bindtap="goToDetail" 
+      <view
+        class="room-card"
+        wx:for="{{roomList}}"
+        wx:key="id"
+        bindtap="goToDetail"
         data-id="{{item.id}}"
       >
-        <image 
-          class="room-img" 
-          src="{{item.img}}" 
-          mode="aspectFill" 
+        <image
+          class="room-img"
+          src="{{item.img}}"
+          mode="aspectFill"
         />
         <view class="card-body">
           <text class="card-name">{{item.name}}</text>
